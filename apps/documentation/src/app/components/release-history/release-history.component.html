@@ -1,0 +1,77 @@
+<p class="snapshot">
+	npm metadata checked {{ registry.checkedAt }}. Publication dates come from the registry; workspace notes come from
+	CHANGELOG.md.
+</p>
+<div class="release-filters">
+	<label
+		>Search releases<input
+			#queryInput
+			type="search"
+			placeholder="Version or unreleased change..."
+			(input)="this.query.set(queryInput.value)" /></label
+	><label
+		>Version<select #versionInput (change)="this.version.set(versionInput.value)">
+			<option value="all">All versions</option>
+			<option value="next">Unreleased workspace</option>
+			@for (release of registry.releases; track release.version) {
+				<option [value]="release.version">{{ release.version }}</option>
+			}
+		</select></label
+	>
+</div>
+<nav class="release-nav" aria-label="Release navigation">
+	@if (showNext()) {
+		<a href="#release-next">Next</a>
+	}
+	@for (release of releases(); track release.version) {
+		<a [href]="'#' + releaseId(release.version)">{{ release.version }}</a>
+	}
+</nav>
+@if (showNext()) {
+	<article class="release" id="release-next">
+		<header>
+			<h3>{{ site.metadata.version }}</h3>
+			<span class="badge">Unreleased workspace</span>
+		</header>
+		<p>
+			No release date is recorded. Changes below come from CHANGELOG.md; they are not published npm release notes.
+		</p>
+		<a routerLink="/migration">Read the breaking-change migration guide</a>
+		@for (category of categories; track category) {
+			@if (inCategory(category).length) {
+				<h4>{{ category }}</h4>
+				<ul>
+					@for (change of inCategory(category); track change.text) {
+						<li>
+							@if (change.breaking) {
+								<strong class="breaking">Breaking change</strong>
+							}
+							{{ change.text }}
+						</li>
+					}
+				</ul>
+			}
+		}
+	</article>
+}
+@for (release of releases(); track release.version) {
+	<article class="release" [id]="releaseId(release.version)">
+		<header>
+			<h3>{{ release.version }}</h3>
+			@if (release.version === registry.latest) {
+				<span class="badge">Latest published</span>
+			}
+			<time [attr.datetime]="release.date">{{ release.date.slice(0, 10) }}</time>
+		</header>
+		<p>
+			Publication timestamp verified from the npm registry. Historical feature, fix, dependency and migration
+			notes are not available in this checkout.
+		</p>
+		<a [href]="site.metadata.npm + '/v/' + release.version" target="_blank" rel="noopener noreferrer"
+			>View package version</a
+		>
+	</article>
+}
+@if (!showNext() && !releases().length) {
+	<p class="empty" role="status">No matching releases. Clear the search or choose another version.</p>
+}

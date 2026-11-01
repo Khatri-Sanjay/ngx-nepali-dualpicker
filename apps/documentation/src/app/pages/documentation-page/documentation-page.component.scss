@@ -1,0 +1,359 @@
+:host {
+	display: block;
+	min-width: 0;
+}
+.page-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 170px;
+	gap: 48px;
+	max-width: 1160px;
+	margin: auto;
+}
+.page-article {
+	min-width: 0;
+}
+.breadcrumbs {
+	display: flex;
+	gap: 9px;
+	flex-wrap: wrap;
+	font-size: 10px;
+	color: var(--doc-muted);
+	margin-bottom: 32px;
+}
+.breadcrumbs a {
+	color: var(--doc-accent);
+}
+a {
+	color: var(--doc-accent);
+	text-underline-offset: 4px;
+}
+a:focus-visible,
+summary:focus-visible {
+	outline: 2px solid var(--doc-accent);
+	outline-offset: 4px;
+}
+.eyebrow {
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 1.3px;
+	color: var(--doc-accent);
+}
+.page-header {
+	margin-bottom: 40px;
+}
+.page-header h1 {
+	font-size: 36px;
+	line-height: 1.2;
+	letter-spacing: -1.2px;
+	margin: 14px 0 16px;
+	overflow-wrap: anywhere;
+}
+.page-header p {
+	font-size: 15px;
+	line-height: 1.8;
+	color: var(--doc-muted);
+	max-width: 700px;
+}
+.hero {
+	padding: 10px 0 32px;
+}
+.hero h1 {
+	font-size: clamp(38px, 4.3vw, 66px);
+	line-height: 1.08;
+	letter-spacing: -2.5px;
+	margin: 24px 0;
+}
+.hero h1 span {
+	color: var(--doc-accent);
+}
+.hero p {
+	font-size: 16px;
+	line-height: 1.85;
+	color: var(--doc-muted);
+}
+.hero-actions {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin: 28px 0;
+}
+.primary-link,
+.secondary-link {
+	padding: 12px 17px;
+	border-radius: 7px;
+	font-size: 12px;
+	font-weight: 650;
+	text-decoration: none;
+}
+.primary-link {
+	color: var(--doc-bg);
+	background: var(--doc-accent);
+}
+.secondary-link {
+	border: 1px solid var(--doc-border);
+	background: var(--doc-bg);
+}
+.hero-facts {
+	display: flex;
+	gap: 18px;
+	flex-wrap: wrap;
+	font-size: 10px;
+	color: var(--doc-muted);
+}
+.hero-facts span:before {
+	content: '✓';
+	margin-right: 5px;
+	color: var(--doc-accent);
+}
+.feature-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	border: 1px solid var(--doc-border);
+	border-radius: 10px;
+	overflow: hidden;
+	margin-bottom: 40px;
+}
+.feature-grid > a {
+	padding: 20px;
+	text-decoration: none;
+}
+.feature-grid > a + a {
+	border-left: 1px solid var(--doc-border);
+}
+.feature-grid span {
+	font-size: 8px;
+	letter-spacing: 0.6px;
+}
+.feature-grid h2 {
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--doc-text);
+	margin: 12px 0 8px;
+}
+.feature-grid p {
+	font-size: 11px;
+	line-height: 1.8;
+	color: var(--doc-muted);
+	margin: 0;
+}
+.doc-section {
+	margin: 36px 0;
+	scroll-margin-top: 96px;
+}
+.doc-section h2 {
+	font-size: 21px;
+	line-height: 1.5;
+	letter-spacing: -0.4px;
+	margin: 0 0 14px;
+}
+.doc-section p {
+	font-size: 13px;
+	line-height: 1.95;
+	color: var(--doc-muted);
+	white-space: pre-line;
+	overflow-wrap: anywhere;
+}
+.heading-anchor {
+	color: inherit;
+	text-decoration: none;
+}
+.heading-anchor span {
+	opacity: 0;
+	color: var(--doc-accent);
+}
+.heading-anchor:hover span,
+.heading-anchor:focus-visible span {
+	opacity: 1;
+}
+.related-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-top: 15px;
+	font-size: 12px;
+}
+.page-toc {
+	position: sticky;
+	top: 108px;
+	align-self: start;
+	max-height: calc(100dvh - 132px);
+	overflow: auto;
+}
+.page-toc nav {
+	border-left: 1px solid var(--doc-border);
+	padding-left: 16px;
+}
+.page-toc nav > strong {
+	display: block;
+	font-size: 9px;
+	letter-spacing: 1px;
+	margin-bottom: 14px;
+	color: var(--doc-muted);
+}
+.page-toc a {
+	display: block;
+	text-decoration: none;
+	font-size: 10px;
+	line-height: 1.65;
+	padding: 5px 0;
+	color: var(--doc-muted);
+}
+.page-toc a.active {
+	color: var(--doc-accent);
+	font-weight: 700;
+}
+.toc-help {
+	padding: 18px 0 0 16px;
+	border-top: 1px solid var(--doc-border);
+	margin-top: 24px;
+}
+.toc-help strong {
+	font-size: 11px;
+}
+.toc-help p {
+	font-size: 10px;
+	line-height: 1.8;
+	color: var(--doc-muted);
+}
+.toc-help a {
+	color: var(--doc-accent);
+}
+.api-disclosure {
+	margin: 10px 0;
+	border: 1px solid var(--doc-border);
+	border-radius: 7px;
+	padding: 12px;
+}
+.api-disclosure summary {
+	font:
+		12px ui-monospace,
+		monospace;
+	color: var(--doc-accent);
+	cursor: pointer;
+	overflow-wrap: anywhere;
+}
+.api-disclosure app-code-block {
+	margin-top: 14px;
+}
+.source-note {
+	font-size: 11px;
+	color: var(--doc-muted);
+	line-height: 1.8;
+	overflow-wrap: anywhere;
+}
+.page-pagination {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+	border-top: 1px solid var(--doc-border);
+	margin-top: 48px;
+	padding-top: 24px;
+}
+.page-pagination a {
+	display: block;
+	padding: 16px;
+	border: 1px solid var(--doc-border);
+	border-radius: 8px;
+	text-decoration: none;
+}
+.page-pagination a:last-child {
+	text-align: right;
+}
+.page-pagination small {
+	display: block;
+	font-size: 10px;
+	color: var(--doc-muted);
+	margin-bottom: 7px;
+}
+.page-pagination strong {
+	font-size: 13px;
+}
+.page-footer {
+	display: flex;
+	gap: 18px;
+	flex-wrap: wrap;
+	padding-top: 24px;
+	font-size: 10px;
+	color: var(--doc-muted);
+}
+.page-footer span {
+	margin-left: auto;
+}
+.mobile-toc {
+	display: none;
+}
+@media (max-width: 1200px) {
+	.page-layout {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+		max-width: 800px;
+	}
+	.page-toc {
+		display: none;
+	}
+	.mobile-toc {
+		display: block;
+		border: 1px solid var(--doc-border);
+		border-radius: 6px;
+		padding: 12px 15px;
+		font-size: 11px;
+		margin-bottom: 28px;
+	}
+	.mobile-toc nav {
+		display: grid;
+		gap: 10px;
+		padding-top: 14px;
+	}
+	.mobile-toc summary {
+		cursor: pointer;
+		color: var(--doc-muted);
+	}
+}
+@media (max-width: 600px) {
+	.page-header h1 {
+		font-size: 30px;
+	}
+	.feature-grid {
+		grid-template-columns: 1fr;
+	}
+	.feature-grid > a + a {
+		border-left: 0;
+		border-top: 1px solid var(--doc-border);
+	}
+	.feature-grid > a {
+		padding: 18px;
+	}
+	.hero h1 {
+		letter-spacing: -1.8px;
+	}
+	.hero .eyebrow {
+		font-size: 8px;
+	}
+	.doc-section h2 {
+		font-size: 19px;
+	}
+	.breadcrumbs {
+		margin-bottom: 24px;
+	}
+	.page-pagination {
+		gap: 10px;
+	}
+	.page-pagination a {
+		padding: 12px;
+	}
+	.page-footer span {
+		margin-left: 0;
+	}
+}
+
+.example-placeholder {
+	min-height: 260px;
+	border: 1px dashed var(--doc-border);
+	border-radius: 10px;
+	display: grid;
+	place-items: center;
+	font-size: 12px;
+	color: var(--doc-muted);
+	margin: 24px 0;
+}

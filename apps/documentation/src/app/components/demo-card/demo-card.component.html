@@ -1,0 +1,113 @@
+<article class="demo-card">
+	<div class="card-heading">
+		<span class="live-label"><span></span> LIVE EXAMPLE</span>
+		<h3>{{ definition.title }}</h3>
+		<p>{{ definition.description }}</p>
+	</div>
+	<div class="tabs" role="group" aria-label="Example view">
+		<button type="button" [attr.aria-pressed]="tab() === 'preview'" (click)="tab.set('preview')">Preview</button>
+		<button type="button" [attr.aria-pressed]="tab() === 'typescript'" (click)="tab.set('typescript')">
+			TypeScript
+		</button>
+		<button type="button" [attr.aria-pressed]="tab() === 'html'" (click)="tab.set('html')">HTML</button>
+	</div>
+	<div class="example-toolbar">
+		<button type="button" (click)="reset()">Reset example</button
+		><button type="button" [attr.aria-pressed]="narrow()" (click)="narrow.set(!narrow())">Narrow preview</button
+		><button type="button" [attr.aria-pressed]="previewDark()" (click)="togglePreviewTheme()">Dark calendar</button>
+	</div>
+	<div [hidden]="tab() !== 'preview'" class="preview" [class.narrow]="narrow()">
+		@if (definition.id === 'locale' || definition.id === 'government') {
+			<label class="option"
+				>Language
+				<select (change)="changeLocale($event)" [value]="config().language">
+					<option value="en">English</option>
+					<option value="ne">नेपाली</option>
+				</select></label
+			>
+		}
+		@if (definition.id === 'theme') {
+			<label class="option"
+				>Theme
+				<select (change)="changeTheme($event)">
+					@for (option of themeOptions; track option.value) {
+						<option [value]="option.value">{{ option.label }}</option>
+					}
+					<option value="system">System</option>
+					<option value="custom">Custom accent</option>
+				</select></label
+			>
+		}
+		<label class="field-label" [id]="definition.id + '-label'">{{
+			config().selectionMode === 'range'
+				? 'Start and end date'
+				: config().selectionMode === 'multiple'
+					? 'Selected dates'
+					: 'Choose a date'
+		}}</label>
+		<ngx-nepali-dualpicker
+			[attr.aria-labelledby]="definition.id + '-label'"
+			[config]="config()"
+			[ngModel]="value()"
+			(ngModelChange)="value.set($event)"
+			(dateSelected)="selected($event)"
+			(calendarTypeChanged)="changeCalendar($event)"
+			(parseError)="error.set($event.message)"
+			(pickerOpened)="record('pickerOpened')"
+			(pickerClosed)="record('pickerClosed')"
+		/>
+		@if (error()) {
+			<p class="hint">Last parse error event: {{ error() }}</p>
+		}
+		@if (definition.id === 'dual' || definition.id === 'government') {
+			<div class="dual-output">
+				<div>
+					<span>Bikram Sambat</span><strong>{{ representation('BS') }}</strong>
+				</div>
+				<div>
+					<span>Gregorian</span><strong>{{ representation('AD') }}</strong>
+				</div>
+			</div>
+		}
+		<div class="result">
+			<span>FORM VALUE</span>
+			<pre aria-live="polite">{{ value() | json }}</pre>
+		</div>
+		<details>
+			<summary>Recent events</summary>
+			@for (event of events(); track $index) {
+				<p class="event">{{ event }}</p>
+			}
+			@if (!events().length) {
+				<p class="event">Interact with the picker to see events.</p>
+			}
+		</details>
+	</div>
+	<details class="configuration-editor">
+		<summary>Edit live configuration</summary>
+		<p>
+			Change the JSON object, then apply it to the real picker. TypeScript and HTML tabs show generated source to
+			copy into your application; arbitrary Angular code is not executed here. JSON cannot contain callbacks or
+			Date instances.
+		</p>
+		<label [for]="definition.id + '-config'">DatePickerConfig (JSON)</label
+		><textarea
+			#editor
+			[id]="definition.id + '-config'"
+			spellcheck="false"
+			[value]="draft()"
+			(input)="draft.set(editor.value)"
+			rows="9"
+		></textarea
+		><button type="button" (click)="applyConfiguration()">Apply configuration</button>
+		@if (configError()) {
+			<p role="alert">{{ configError() }}</p>
+		}
+	</details>
+	@if (tab() === 'typescript') {
+		<div class="source"><app-code-block [code]="typescript" /></div>
+	}
+	@if (tab() === 'html') {
+		<div class="source"><app-code-block [code]="html" language="HTML" /></div>
+	}
+</article>

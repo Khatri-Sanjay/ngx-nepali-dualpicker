@@ -1,0 +1,57 @@
+import type { DatePickerConfig } from './datepicker-config.model';
+
+/**
+ * Default configuration
+ */
+export const DEFAULT_PICKER_CONFIG: Required<DatePickerConfig> = {
+	language: 'en',
+	calendar: 'BS',
+	convertOnCalendarChange: false,
+	allowTextInput: false,
+	readOnly: false,
+	showSecondaryDate: false,
+	dateFilter: () => true,
+	rangeConstraints: {},
+	presets: [],
+	id: '',
+	validation: { enabled: false, requireCompleteRange: true },
+	displayFormat: 'yyyy-MM-dd',
+	outputFormat: 'yyyy-MM-dd',
+	monthLabelFormat: 'full',
+	weekdayLabelFormat: 'narrow',
+	selectionMode: 'single',
+	showSelectionModeToggle: false,
+	minDate: null,
+	maxDate: null,
+	disableFutureDates: false,
+	disablePastDates: false,
+	disabledDates: [],
+	disabledDaysOfWeek: [],
+	showClearButton: true,
+	showTodayButton: true,
+	closeOnSelection: true,
+	placeholder: 'Select a date',
+	popupPosition: 'bottom-left',
+	theme: 'light',
+	customTheme: {},
+	bsYearRange: {
+		start: 2000,
+		end: 2139,
+	},
+	ariaLabels: {
+		input: '',
+		keyboardHelp: '',
+		calendar: 'Nepali Calendar',
+		nextMonth: 'Next Month',
+		previousMonth: 'Previous Month',
+		selectDate: 'Select Date',
+		clearDate: 'Clear Date',
+		today: 'Today',
+	},
+	mobilePresentation: 'bottom-sheet',
+	firstDayOfWeek: 0,
+	inline: false,
+	multipleSelection: {
+		maxSelections: undefined,
+	},
+};

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+tmp/
+out-tsc/
+coverage/
+.angular/
+.git/
+.idea/
+.husky/_/
+package-lock.json
+LICENSE
+**/LICENSE
+*.tgz

@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "paths": {
+            "ngx-nepali-dualpicker": ["./libs/ngx-nepali-dualpicker/src/public-api.ts"],
+            "ngx-nepali-dualpicker/core": ["./libs/ngx-nepali-dualpicker/src/core-api.ts"]
+        },
+        "types": ["jasmine"]
+    },
+    "include": ["apps/**/*.ts", "libs/**/*.ts"],
+    "exclude": ["node_modules", "dist", "tmp", "out-tsc", "coverage"]
+}

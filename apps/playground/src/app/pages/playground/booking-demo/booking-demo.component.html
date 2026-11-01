@@ -1,0 +1,150 @@
+<section aria-labelledby="booking-title">
+	<header class="booking-heading">
+		<div class="heading-icon" aria-hidden="true">
+			<svg
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.7"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<rect x="3" y="5" width="18" height="16" rx="4" />
+				<path d="M7 3v4m10-4v4M3 11h18m-12 5h6" />
+			</svg>
+		</div>
+		<div>
+			<p class="eyebrow">BOOKING EXAMPLE</p>
+			<h2 id="booking-title">Plan your date range</h2>
+			<p class="description">Choose a period in Bikram Sambat, with Gregorian dates alongside.</p>
+		</div>
+		<span class="calendar-badge">{{ config.showSecondaryDate ? 'BS + AD' : 'BS' }}</span>
+	</header>
+
+	<fieldset class="booking-options">
+		<legend>Customize the calendar</legend>
+		<label class="option">
+			<input
+				type="checkbox"
+				[ngModel]="config.showSecondaryDate"
+				(ngModelChange)="updateConfig({ showSecondaryDate: $event })"
+			/>
+			<span><strong>Dual-date display</strong><small>Show the Gregorian date below each BS day.</small></span>
+		</label>
+		<label class="option">
+			<input type="checkbox" [(ngModel)]="customCells" />
+			<span><strong>Example prices</strong><small>Display a sample price on available days.</small></span>
+		</label>
+		<label class="option">
+			<input
+				type="checkbox"
+				[ngModel]="config.rangeConstraints?.preventCrossingUnavailableDates"
+				(ngModelChange)="
+					updateConfig({
+						rangeConstraints: { minDays: 3, maxDays: 32, preventCrossingUnavailableDates: $event },
+					})
+				"
+			/>
+			<span
+				><strong>Keep the whole period available</strong
+				><small>Prevent ranges from crossing unavailable days.</small></span
+			>
+		</label>
+	</fieldset>
+
+	<div class="booking-layout">
+		<div class="calendar-panel">
+			<div class="calendar-heading">
+				<label for="booking-demo">Booking period</label>
+				<span>3 to 32 days, inclusive</span>
+			</div>
+			<p id="booking-help" class="help">Select a start date, then an end date. Days 10 and 20 are unavailable.</p>
+			<ngx-nepali-dualpicker
+				[config]="config"
+				[formControl]="booking"
+				aria-describedby="booking-help"
+				(parseError)="selectionError.set($event.message)"
+				(dateSelected)="selectionError.set('')"
+			>
+				@if (customCells) {
+					<ng-template ndpDateCell let-date let-disabled="disabled" let-secondary="secondaryDate">
+						<span class="price-cell">
+							<span class="price-day">{{ date.day }}</span>
+							<small class="price-amount">{{ disabled ? '-' : 'Rs500' }}</small>
+							@if (secondary && config.showSecondaryDate) {
+								<small class="price-secondary">AD {{ secondary.month }}/{{ secondary.day }}</small>
+							}
+						</span>
+					</ng-template>
+				}
+			</ngx-nepali-dualpicker>
+			<ul class="calendar-legend" aria-label="Calendar legend">
+				<li><span class="legend-dot selected" aria-hidden="true"></span>Selected</li>
+				<li><span class="legend-dot range" aria-hidden="true"></span>In range</li>
+				<li><span class="legend-dot unavailable" aria-hidden="true"></span>Unavailable</li>
+			</ul>
+			@if (customCells) {
+				<p class="help price-note">Prices are illustrative: Rs 500 per available day.</p>
+			}
+		</div>
+
+		<aside class="selection-panel" aria-labelledby="selection-title">
+			<div class="summary-heading">
+				<h3 id="selection-title">Your selection</h3>
+				<button
+					type="button"
+					class="clear-button"
+					(click)="clearBooking()"
+					[disabled]="!range() && !selectionError()"
+				>
+					Clear
+				</button>
+			</div>
+			<dl class="selected-dates">
+				<div>
+					<dt>Start date <span>BS</span></dt>
+					<dd [class.empty]="!range()?.start">{{ range()?.start || 'Choose a start date' }}</dd>
+				</div>
+				<div>
+					<dt>End date <span>BS</span></dt>
+					<dd [class.empty]="!range()?.end">{{ range()?.end || 'Choose an end date' }}</dd>
+				</div>
+			</dl>
+			<p
+				class="selection-feedback"
+				[class.complete]="range()?.end && status() === 'VALID' && !selectionError()"
+				aria-live="polite"
+				aria-atomic="true"
+			>
+				{{
+					selectionError() ||
+						(range()?.end
+							? status() === 'VALID'
+								? 'Your date range is ready.'
+								: 'This range does not meet the booking rules.'
+							: range()?.start
+								? 'Start date selected. Now choose an end date.'
+								: 'Your selected dates will appear here.')
+				}}
+			</p>
+			<div class="booking-rules">
+				<h4>Before you select</h4>
+				<p>Choose between 3 and 32 calendar days. Both endpoints count toward the total.</p>
+				<p>
+					{{
+						config.rangeConstraints?.preventCrossingUnavailableDates
+							? 'Every day in your period must be available. Month presets may be rejected.'
+							: 'Unavailable days may fall inside your period. Turn on whole-period availability to prevent this.'
+					}}
+				</p>
+			</div>
+		</aside>
+	</div>
+
+	<details class="form-details">
+		<summary>
+			Inspect form value <span>{{ status() }}</span>
+		</summary>
+		<pre>{{ value() | json }}</pre>
+	</details>
+</section>

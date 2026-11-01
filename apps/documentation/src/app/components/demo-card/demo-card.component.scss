@@ -1,0 +1,231 @@
+.demo-card {
+	border: 1px solid var(--doc-border);
+	border-radius: 14px;
+	background: var(--doc-bg);
+	margin: 24px 0;
+	min-width: 0;
+}
+.card-heading {
+	padding: 24px 28px 18px;
+}
+.live-label {
+	font-size: 9px;
+	letter-spacing: 1.8px;
+	color: var(--doc-muted);
+	font-weight: 700;
+}
+.live-label span {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #2da889;
+	margin-right: 6px;
+}
+h3 {
+	font-size: 20px;
+	letter-spacing: -0.4px;
+	margin: 12px 0 8px;
+}
+p {
+	color: var(--doc-muted);
+	font-size: 13px;
+	line-height: 1.8;
+	margin: 0;
+}
+.tabs {
+	display: flex;
+	border-bottom: 1px solid var(--doc-border);
+	padding: 0 28px;
+	gap: 24px;
+}
+.tabs button {
+	background: none;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	color: var(--doc-muted);
+	padding: 12px 0;
+	cursor: pointer;
+	font-size: 12px;
+}
+.tabs button[aria-pressed='true'] {
+	color: var(--doc-accent);
+	border-bottom-color: var(--doc-accent);
+	font-weight: 650;
+}
+.preview {
+	padding: 28px;
+	background: var(--doc-surface);
+	border-radius: 0 0 14px 14px;
+}
+.preview > .field-label {
+	max-width: 360px;
+}
+.result {
+	max-width: 620px;
+}
+.demo-card:hover {
+	border-color: color-mix(in srgb, var(--doc-accent) 30%, var(--doc-border));
+}
+.preview[hidden] {
+	display: none;
+}
+.field-label {
+	display: block;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--doc-text);
+	margin-bottom: 9px;
+}
+.result {
+	background: var(--doc-bg);
+	border: 1px solid var(--doc-border);
+	padding: 16px 18px;
+	border-radius: 8px;
+	margin-top: 24px;
+}
+.result > span {
+	color: var(--doc-muted);
+	font-size: 9px;
+	letter-spacing: 1.5px;
+}
+pre {
+	font:
+		12px/1.8 ui-monospace,
+		Consolas,
+		monospace;
+	color: var(--doc-accent);
+	margin: 8px 0 0;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.option {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+	font-size: 12px;
+	color: var(--doc-muted);
+}
+select {
+	padding: 7px 12px;
+	border: 1px solid var(--doc-border);
+	border-radius: 6px;
+	background: var(--doc-bg);
+	color: var(--doc-text);
+}
+.source {
+	padding: 24px;
+}
+details {
+	margin-top: 16px;
+	font-size: 11px;
+	color: var(--doc-muted);
+}
+summary {
+	cursor: pointer;
+}
+.event {
+	font:
+		10px/1.8 ui-monospace,
+		monospace;
+	overflow-wrap: anywhere;
+	margin-top: 8px;
+}
+.dual-output {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+	margin-top: 22px;
+}
+.dual-output span {
+	display: block;
+	font-size: 11px;
+	color: var(--doc-muted);
+	margin-bottom: 8px;
+}
+.dual-output strong {
+	font-size: 17px;
+}
+.error {
+	color: #c44444;
+	margin-top: 12px;
+}
+@media (max-width: 600px) {
+	.preview,
+	.card-heading {
+		padding: 20px;
+	}
+	.source {
+		padding: 14px;
+	}
+	.dual-output {
+		grid-template-columns: 1fr;
+	}
+	.tabs {
+		padding: 0 20px;
+		gap: 20px;
+	}
+}
+
+.example-toolbar {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--doc-border);
+}
+.example-toolbar button,
+.configuration-editor button {
+	border: 1px solid var(--doc-border);
+	background: var(--doc-bg);
+	color: var(--doc-muted);
+	padding: 7px 10px;
+	border-radius: 5px;
+	font: inherit;
+	font-size: 10px;
+	cursor: pointer;
+}
+.example-toolbar button[aria-pressed='true'] {
+	background: var(--doc-accent-soft);
+	color: var(--doc-accent);
+}
+.preview.narrow {
+	max-width: 330px;
+	margin: auto;
+}
+.configuration-editor {
+	margin: 18px;
+	border: 1px solid var(--doc-border);
+	border-radius: 7px;
+	padding: 12px;
+	font-size: 11px;
+}
+.configuration-editor summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+.configuration-editor p {
+	font-size: 11px;
+	line-height: 1.8;
+	color: var(--doc-muted);
+}
+.configuration-editor label {
+	display: block;
+	margin: 14px 0 8px;
+}
+.configuration-editor textarea {
+	display: block;
+	width: 100%;
+	resize: vertical;
+	max-height: 500px;
+	padding: 12px;
+	font:
+		11px/1.7 ui-monospace,
+		monospace;
+	background: var(--doc-surface);
+	color: var(--doc-text);
+	border: 1px solid var(--doc-border);
+	border-radius: 6px;
+	margin-bottom: 12px;
+}

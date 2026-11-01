@@ -1,0 +1,60 @@
+name: Library compatibility
+
+on:
+    push:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    package:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: npm
+            - run: npm ci
+            - run: npm run check
+            - run: npm run build
+            - run: npm test
+            - run: npm run test:playground
+            - run: npm run test:docs
+            - run: npm run check:docs
+            - run: npm run check:docs-site
+            - run: npm run check:docs-browser
+              env:
+                  CHROME_BIN: /usr/bin/google-chrome
+            - run: npm run check:calendar
+            - run: npm run check:package
+            - run: npm run check:bundle
+            - run: npm run pack:lib
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: library-package
+                  path: dist/ngx-nepali-dualpicker
+
+    consumers:
+        needs: package
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - { angular: '17.0.0', node: '20.19.0' }
+                    - { angular: '17', node: '20.19.0' }
+                    - { angular: '18', node: '20.19.0' }
+                    - { angular: '19', node: '20.19.0' }
+                    - { angular: '20', node: '24.19.0' }
+                    - { angular: '21', node: '24.19.0' }
+                    - { angular: '22', node: '24.19.0' }
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node }}
+            - uses: actions/download-artifact@v4
+              with:
+                  name: library-package
+                  path: dist/ngx-nepali-dualpicker
+            - run: npm run test:compat -- ${{ matrix.angular }}

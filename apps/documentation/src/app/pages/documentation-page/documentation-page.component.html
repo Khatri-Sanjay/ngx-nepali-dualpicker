@@ -1,0 +1,215 @@
+@if (page(); as current) {
+	<div class="page-layout">
+		<article class="page-article">
+			<nav class="breadcrumbs" aria-label="Breadcrumb">
+				<a routerLink="/introduction">Documentation</a><span aria-hidden="true">/</span
+				><span>{{ current.group }}</span
+				><span aria-hidden="true">/</span><span aria-current="page">{{ current.title }}</span>
+			</nav>
+			@if (current.id === 'home') {
+				<section class="hero">
+					<span class="eyebrow"><span class="tiny-dot"></span> TWO CALENDARS. ONE ANGULAR COMPONENT.</span>
+					<h1>Nepali dates.<br /><span>Angular simplicity.</span></h1>
+					<p>
+						Bikram Sambat and Gregorian calendars, together.<br />A configurable date picker for the forms
+						you build.
+					</p>
+					<div class="hero-actions">
+						<a class="primary-link" routerLink="/getting-started">Get started &#8594;</a
+						><a class="secondary-link" routerLink="/playground">Open the playground</a>
+					</div>
+					<div class="hero-facts">
+						<span>BS + AD calendars</span><span>Standalone Angular</span><span>Typed configuration</span>
+					</div>
+				</section>
+				<div class="feature-grid">
+					<a routerLink="/forms"
+						><span>01 / INTEGRATION</span>
+						<h2>Fits your forms</h2>
+						<p>Reactive and template-driven forms with inspectable date-only values.</p></a
+					><a routerLink="/conversion"
+						><span>02 / TWO CALENDARS</span>
+						<h2>Bridge BS and AD</h2>
+						<p>Public conversion services and a pure core entry point.</p></a
+					><a routerLink="/theming"
+						><span>03 / PERSONALIZATION</span>
+						<h2>Make it yours</h2>
+						<p>Seven preset themes, custom tokens and English or Nepali labels.</p></a
+					>
+				</div>
+			} @else {
+				<header class="page-header">
+					<span class="eyebrow">{{ current.group }}</span>
+					<h1>{{ current.title }}</h1>
+					<p>{{ current.description }}</p>
+				</header>
+			}
+			<details class="mobile-toc">
+				<summary>On this page</summary>
+				<nav aria-label="Page sections">
+					@for (item of toc(); track item.id) {
+						<a [routerLink]="pagePath(current.id)" [fragment]="item.id">{{ item.title }}</a>
+					}
+				</nav>
+			</details>
+			@for (section of current.sections; track section.id) {
+				<section class="doc-section" [id]="section.id">
+					<h2>
+						<a class="heading-anchor" [routerLink]="pagePath(current.id)" [fragment]="section.id"
+							>{{ section.title }}<span aria-hidden="true"> #</span></a
+						>
+					</h2>
+					@if (section.warning) {
+						<app-info-box title="Please note" kind="warning">{{ section.body }}</app-info-box>
+					} @else {
+						<p>{{ section.body }}</p>
+					}
+					@if (section.code) {
+						<app-code-block [code]="section.code" [language]="section.language ?? 'TypeScript'" />
+					}
+					@if (section.links?.length) {
+						<div class="related-links">
+							@for (link of section.links; track link.href) {
+								@if (link.external) {
+									<a [href]="link.href" target="_blank" rel="noopener noreferrer"
+										>{{ link.label }} &#8599;</a
+									>
+								} @else {
+									<a [routerLink]="link.href">{{ link.label }} &#8594;</a>
+								}
+							}
+						</div>
+					}
+				</section>
+			}
+			@if (current.id === 'home') {
+				<section class="doc-section">
+					<h2>Start with one import</h2>
+					<app-code-block [code]="quickStart" />
+					<div class="related-links">
+						<a routerLink="/installation">Install the workspace package</a
+						><a routerLink="/compatibility">Check compatibility</a
+						><a routerLink="/api">Explore the public API</a>
+					</div>
+				</section>
+			}
+			@if (current.id === 'forms') {
+				@defer (on viewport) {
+					<app-forms-example />
+				} @placeholder {
+					<div class="example-placeholder">Interactive forms example</div>
+				}
+			}
+			@if (current.id === 'conversion') {
+				@defer (on viewport) {
+					<app-conversion-example />
+				} @placeholder {
+					<div class="example-placeholder">Interactive conversion example</div>
+				}
+			}
+			@if (current.id === 'formatting' || current.id === 'localization' || current.id === 'nepali-date-pipe') {
+				@defer (on viewport) {
+					<app-formatting-example />
+				} @placeholder {
+					<div class="example-placeholder">Interactive formatting example</div>
+				}
+			}
+			@if (current.id === 'playground') {
+				<app-playground-embed />
+			}
+			@for (id of current.examples ?? []; track id) {
+				@defer (on viewport) {
+					<app-demo-card [example]="example(id)" />
+				} @placeholder {
+					<div class="example-placeholder">Interactive example: {{ example(id).title }}</div>
+				}
+			}
+			@for (id of current.references ?? []; track id) {
+				@if (referenceData(id); as block) {
+					<section class="doc-section reference-section" [id]="id">
+						<h2>{{ referenceTitles[id] ?? id }}</h2>
+						@if (block.description) {
+							<p>{{ block.description }}</p>
+						}
+						@if (block.rows?.length) {
+							<app-api-table
+								[caption]="referenceTitles[id] ?? id"
+								[rows]="block.rows ?? []"
+								[mode]="block.mode ?? 'properties'"
+								[showDefaults]="block.defaults ?? false"
+							/>
+						}
+						@if (block.code) {
+							<app-code-block [code]="block.code" />
+						}
+						@for (declaration of block.declarations ?? []; track declaration.name) {
+							<details class="api-disclosure">
+								<summary>{{ declaration.name }}</summary>
+								<app-code-block [code]="declaration.code" />
+							</details>
+						}
+					</section>
+				}
+			}
+			@if (current.id === 'changelog') {
+				<app-release-history />
+			}
+			@if (current.id === 'package') {
+				<p class="source-note">
+					Registry/link snapshot checked {{ site.registry.checkedAt }}. Latest published npm version:
+					{{ site.registry.latest }}.
+					<a [href]="site.metadata.documentation" target="_blank" rel="noopener noreferrer"
+						>Existing package homepage</a
+					>
+					(the older site, not a confirmed URL for this deployment).
+					<a [href]="site.baseHref + 'assets/library-license.txt'">Read the MIT license</a>.
+				</p>
+			}
+			@if (current.source) {
+				<p class="source-note">
+					Implementation source: <code>{{ current.source }}</code
+					>. The repository URL in package metadata currently returns 404; a source link will appear after it
+					is verified.
+				</p>
+			}
+			<nav class="page-pagination" aria-label="Previous and next documentation pages">
+				@if (previous(); as prev) {
+					<a [routerLink]="pagePath(prev.id)"
+						><small>&larr; Previous</small><strong>{{ prev.title }}</strong></a
+					>
+				} @else {
+					<span></span>
+				}
+				@if (next(); as nextPage) {
+					<a [routerLink]="pagePath(nextPage.id)"
+						><small>Next &rarr;</small><strong>{{ nextPage.title }}</strong></a
+					>
+				}
+			</nav>
+			<div class="page-footer">
+				<a [href]="metadata.npm" target="_blank" rel="noopener noreferrer">npm package &#8599;</a
+				><a routerLink="/contributing">Improve this documentation</a
+				><span>Workspace {{ metadata.version }}</span>
+			</div>
+		</article>
+		<aside class="page-toc">
+			<nav aria-label="On this page">
+				<strong>ON THIS PAGE</strong>
+				@for (item of toc(); track item.id) {
+					<a
+						[routerLink]="pagePath(current.id)"
+						[fragment]="item.id"
+						[class.active]="active() === item.id"
+						[attr.aria-current]="active() === item.id ? 'location' : null"
+						>{{ item.title }}</a
+					>
+				}
+			</nav>
+			<div class="toc-help">
+				<strong>Try it yourself</strong>
+				<p>Change configuration and see the real calendar update.</p>
+				<a routerLink="/playground">Open playground &#8594;</a>
+			</div>
+		</aside>
+	</div>
+}

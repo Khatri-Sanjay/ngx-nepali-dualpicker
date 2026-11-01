@@ -1,0 +1,451 @@
+<header class="playground-heading">
+	<div>
+		<p class="eyebrow">INTERACTIVE WORKSPACE</p>
+		<h1>Nepali Date Playground</h1>
+		<p>Build your configuration. See every change live. Copy the code into your app.</p>
+	</div>
+	<div class="workspace-actions">
+		<button
+			type="button"
+			class="secondary"
+			[attr.aria-expanded]="editorOpen()"
+			[attr.aria-controls]="editorOpen() ? 'config-editor' : null"
+			(click)="editorOpen.set(!editorOpen())"
+		>
+			{{ editorOpen() ? 'Hide JSON editor' : 'Edit config JSON' }}</button
+		><button type="button" class="secondary" (click)="reset()">Reset playground</button>
+	</div>
+</header>
+
+<div class="playground-layout">
+	<section class="settings panel" aria-labelledby="settings-title">
+		<div class="panel-heading">
+			<h2 id="settings-title">Configure</h2>
+			<span class="settings-number">01</span
+			><button
+				type="button"
+				class="secondary settings-toggle"
+				aria-controls="settings-body"
+				[attr.aria-expanded]="settingsExpanded()"
+				(click)="settingsExpanded.set(!settingsExpanded())"
+			>
+				{{ settingsExpanded() ? 'Hide options' : 'Show options' }}
+			</button>
+		</div>
+		<div id="settings-body" class="settings-body" [class.expanded]="settingsExpanded()">
+			<label
+				>Start from a preset
+				<select [ngModel]="preset()" (ngModelChange)="loadPreset($event)">
+					<option value="custom" disabled>Custom configuration</option>
+					@for (example of examples; track example.id) {
+						<option [value]="example.id">{{ example.title }}</option>
+					}
+				</select>
+			</label>
+			<div class="field-pair">
+				<label
+					>Calendar
+					<select
+						aria-label="Calendar"
+						[ngModel]="config().calendar"
+						(ngModelChange)="update({ calendar: $event, minDate: null, maxDate: null, disabledDates: [] })"
+					>
+						<option value="BS">Bikram Sambat</option>
+						<option value="AD">Gregorian</option>
+					</select>
+				</label>
+				<label
+					>Language
+					<select [ngModel]="config().language" (ngModelChange)="update({ language: $event })">
+						<option value="en">English</option>
+						<option value="ne">Nepali</option>
+					</select>
+				</label>
+			</div>
+			<label
+				>Selection mode
+				<select
+					aria-label="Selection mode"
+					[ngModel]="config().selectionMode"
+					(ngModelChange)="update({ selectionMode: $event })"
+				>
+					<option value="single">Single date</option>
+					<option value="range">Date range</option>
+					<option value="multiple">Multiple dates</option>
+				</select>
+			</label>
+			<div class="field-pair">
+				<label
+					>Theme
+					<select [ngModel]="themeName()" (ngModelChange)="update({ theme: $event, customTheme: {} })">
+						<option value="custom" disabled>Custom theme (JSON)</option>
+						@for (option of themeOptions; track option.value) {
+							<option [value]="option.value">{{ option.label }}</option>
+						}
+						<option value="system">System</option>
+					</select>
+				</label>
+				<label
+					>Week starts
+					<select [ngModel]="config().firstDayOfWeek" (ngModelChange)="update({ firstDayOfWeek: $event })">
+						<option [ngValue]="0">Sunday</option>
+						<option [ngValue]="1">Monday</option>
+						<option [ngValue]="2">Tuesday</option>
+						<option [ngValue]="3">Wednesday</option>
+						<option [ngValue]="4">Thursday</option>
+						<option [ngValue]="5">Friday</option>
+						<option [ngValue]="6">Saturday</option>
+					</select>
+				</label>
+			</div>
+			@if (config().selectionMode === 'multiple') {
+				<label
+					>Maximum selections<input
+						type="number"
+						min="1"
+						placeholder="No limit"
+						[ngModel]="config().multipleSelection?.maxSelections"
+						(ngModelChange)="updateMultiple($event)"
+				/></label>
+			}
+			<fieldset>
+				<legend>Behavior</legend>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().showSelectionModeToggle"
+						(ngModelChange)="update({ showSelectionModeToggle: $event })"
+					/>Show mode switch in the calendar</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().showSecondaryDate"
+						(ngModelChange)="update({ showSecondaryDate: $event })"
+					/>Show secondary calendar dates</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().readOnly"
+						(ngModelChange)="setReadonly($event)"
+					/>Readonly (browse without editing)</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().validation?.enabled"
+						(ngModelChange)="update({ validation: { enabled: $event, requireCompleteRange: true } })"
+					/>Validate dates and completed ranges</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().inline"
+						(ngModelChange)="update({ inline: $event })"
+					/>Inline calendar</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[disabled]="config().inline || config().displayFormat === 'MMM dd, yyyy'"
+						[ngModel]="config().allowTextInput"
+						(ngModelChange)="update({ allowTextInput: $event })"
+					/>Manual date input (popup mode)</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().disabledDaysOfWeek?.includes(0) && config().disabledDaysOfWeek?.includes(6)"
+						(ngModelChange)="update({ disabledDaysOfWeek: $event ? [0, 6] : [] })"
+					/>Disable weekends</label
+				>
+				<label class="toggle"
+					><input type="checkbox" [ngModel]="disabled()" (ngModelChange)="setDisabled($event)" />Disable form
+					control</label
+				>
+			</fieldset>
+
+			@if (config().selectionMode === 'range') {
+				<fieldset>
+					<legend>Range rules</legend>
+					<div class="field-pair">
+						<label
+							>Minimum days<input
+								type="number"
+								min="1"
+								[ngModel]="config().rangeConstraints?.minDays"
+								(ngModelChange)="updateRange({ minDays: $event ?? undefined })"
+						/></label>
+						<label
+							>Maximum days<input
+								type="number"
+								min="1"
+								[ngModel]="config().rangeConstraints?.maxDays"
+								(ngModelChange)="updateRange({ maxDays: $event ?? undefined })"
+						/></label>
+					</div>
+					<label class="toggle"
+						><input
+							type="checkbox"
+							[ngModel]="config().rangeConstraints?.preventCrossingUnavailableDates"
+							(ngModelChange)="updateRange({ preventCrossingUnavailableDates: $event })"
+						/>Prevent crossing unavailable dates</label
+					>
+				</fieldset>
+			}
+			<details class="settings-group">
+				<summary>Date restrictions</summary>
+				<label
+					>Minimum date<input
+						type="text"
+						placeholder="yyyy-MM-dd"
+						[ngModel]="boundText(config().minDate)"
+						[ngModelOptions]="{ updateOn: 'blur' }"
+						(ngModelChange)="updateBound('minDate', $event)"
+				/></label>
+				<label
+					>Maximum date<input
+						type="text"
+						placeholder="yyyy-MM-dd"
+						[ngModel]="boundText(config().maxDate)"
+						[ngModelOptions]="{ updateOn: 'blur' }"
+						(ngModelChange)="updateBound('maxDate', $event)"
+				/></label>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().disablePastDates"
+						(ngModelChange)="update({ disablePastDates: $event })"
+					/>Disable past dates</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().disableFutureDates"
+						(ngModelChange)="update({ disableFutureDates: $event })"
+					/>Disable future dates</label
+				>
+				<p class="hint">
+					Bounds use yyyy-MM-dd in the selected calendar. Edit disabledDates in JSON to exclude individual
+					days.
+				</p>
+			</details>
+			<details class="settings-group">
+				<summary>Formats and labels</summary>
+				<label
+					>Display format<select
+						[ngModel]="config().displayFormat"
+						(ngModelChange)="update({ displayFormat: $event })"
+					>
+						@for (format of formats; track format) {
+							<option [value]="format">{{ format }}</option>
+						}
+						<option value="MMM dd, yyyy">MMM dd, yyyy (display only)</option>
+					</select></label
+				>
+				<label
+					>Output format<select
+						[ngModel]="config().outputFormat"
+						(ngModelChange)="update({ outputFormat: $event })"
+					>
+						@for (format of formats; track format) {
+							<option [value]="format">{{ format }}</option>
+						}
+					</select></label
+				>
+				<label
+					>Input placeholder<input
+						type="text"
+						[ngModel]="config().placeholder ?? ''"
+						(ngModelChange)="update({ placeholder: $event })"
+				/></label>
+				<p class="hint">Manual input uses the display format. Named-month display is read-only.</p>
+			</details>
+			<details class="settings-group">
+				<summary>Popup and actions</summary>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().closeOnSelection"
+						(ngModelChange)="update({ closeOnSelection: $event })"
+					/>Close after completing selection</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().convertOnCalendarChange"
+						(ngModelChange)="update({ convertOnCalendarChange: $event })"
+					/>Convert selection on BS / AD toggle</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().showTodayButton"
+						(ngModelChange)="update({ showTodayButton: $event })"
+					/>Show Today action</label
+				>
+				<label class="toggle"
+					><input
+						type="checkbox"
+						[ngModel]="config().showClearButton"
+						(ngModelChange)="update({ showClearButton: $event })"
+					/>Show Clear action</label
+				>
+				<label
+					>Popup position<select
+						[ngModel]="config().popupPosition"
+						(ngModelChange)="update({ popupPosition: $event })"
+					>
+						<option value="auto">Automatic</option>
+						<option value="bottom-left">Bottom left</option>
+						<option value="bottom-right">Bottom right</option>
+						<option value="top-left">Top left</option>
+						<option value="top-right">Top right</option>
+					</select></label
+				>
+				<label
+					>Mobile layout<select
+						[ngModel]="config().mobilePresentation"
+						(ngModelChange)="update({ mobilePresentation: $event })"
+					>
+						<option value="bottom-sheet">Bottom sheet</option>
+						<option value="popup">Anchored popup</option>
+					</select></label
+				>
+				<p class="hint">Turn off Inline calendar to try popup position, closing and mobile behavior.</p>
+			</details>
+
+			<p class="hint">
+				Appearance and behavior edits preserve your selection. Changing the calendar, mode or output format
+				clears incompatible values. Calendar controls also clear old date bounds.
+			</p>
+		</div>
+	</section>
+
+	<div class="preview-column">
+		<div class="live-workspace" [class.with-editor]="editorOpen()">
+			<section class="panel preview-panel" aria-labelledby="preview-title">
+				<div class="panel-heading">
+					<h2 id="preview-title">Live preview</h2>
+					<span class="live-badge">LIVE</span>
+				</div>
+				<p class="hint">
+					{{
+						disabled()
+							? 'Disabled: value remains visible; all picker actions are unavailable.'
+							: config().readOnly
+								? 'Readonly: browse the calendar without changing the selected value.'
+								: 'Interactive: hover or focus a date, then select. Unavailable dates remain visible.'
+					}}
+				</p>
+				<div class="preview-stage">
+					@for (revision of [previewRevision()]; track revision) {
+						<ngx-nepali-dualpicker
+							#previewPicker
+							aria-label="Playground date picker"
+							[config]="config()"
+							[formControl]="control"
+							(dateSelected)="
+								selected(
+									$event,
+									previewPicker.rangeMode()
+										? 'range'
+										: previewPicker.multipleMode()
+											? 'multiple'
+											: 'single'
+								)
+							"
+							(calendarTypeChanged)="calendarChanged($event)"
+							(pickerOpened)="record('pickerOpened')"
+							(pickerClosed)="record('pickerClosed')"
+							(parseError)="error.set($event.message)"
+						/>
+					}
+				</div>
+				@if (error()) {
+					<p class="error" role="alert">{{ error() }}</p>
+				}
+				<div class="value-heading">
+					<span>FORM VALUE</span
+					><button type="button" class="text-button" (click)="clear()">Clear value</button>
+				</div>
+				<pre class="value">{{ value() | json }}</pre>
+				<p class="hint">Control status: {{ status() }}</p>
+				<pre class="value">{{ control.errors | json }}</pre>
+				<details>
+					<summary>
+						Recent events <span>{{ events().length }}</span>
+					</summary>
+					@for (event of events(); track $index) {
+						<code class="event">{{ event }}</code>
+					}
+					@if (!events().length) {
+						<p class="hint">Select a date or open the picker to inspect its events.</p>
+					}
+				</details>
+			</section>
+
+			@if (editorOpen()) {
+				<section id="config-editor" class="panel config-editor" aria-labelledby="editor-title">
+					<div class="panel-heading">
+						<h2 id="editor-title">Edit your config object</h2>
+						<span class="live-badge">JSON</span>
+					</div>
+					<p id="editor-help" class="hint">
+						Change any JSON option below. Valid edits update the calendar immediately; invalid edits keep
+						the last working preview.
+					</p>
+					<label class="editor-label" for="config-json">DatePickerConfig</label>
+					<textarea
+						id="config-json"
+						spellcheck="false"
+						autocapitalize="off"
+						autocomplete="off"
+						[ngModel]="editorDraft()"
+						(ngModelChange)="editConfig($event)"
+						aria-describedby="editor-help editor-status"
+						[attr.aria-invalid]="editorError() ? 'true' : 'false'"
+					></textarea>
+					<p id="editor-status" class="editor-status" [class.error]="editorError()" aria-live="polite">
+						{{ editorError() || 'Live preview is up to date.' }}
+					</p>
+					<button type="button" class="secondary" (click)="syncEditor()">
+						{{ editorError() ? 'Restore working config' : 'Format JSON' }}
+					</button>
+					<p class="hint editor-note">
+						Use double quotes and no trailing commas. JSON supports static presets and date lists. For
+						dateFilter callbacks and custom cell templates, see the booking example below.
+					</p>
+				</section>
+			}
+		</div>
+
+		<app-booking-demo class="panel" />
+		<section class="panel source-panel" aria-labelledby="code-title">
+			<div class="panel-heading">
+				<h2 id="code-title">Use it in your app</h2>
+				<span>02</span>
+			</div>
+			<div class="code-tabs" role="group" aria-label="Code format">
+				<button
+					type="button"
+					[attr.aria-pressed]="codeTab() === 'typescript'"
+					(click)="codeTab.set('typescript')"
+				>
+					TypeScript
+				</button>
+				<button type="button" [attr.aria-pressed]="codeTab() === 'html'" (click)="codeTab.set('html')">
+					Template
+				</button>
+				<button type="button" [attr.aria-pressed]="codeTab() === 'config'" (click)="codeTab.set('config')">
+					Config JSON
+				</button>
+			</div>
+			<app-code-block
+				[code]="codeTab() === 'typescript' ? typescript : codeTab() === 'html' ? html : configCode()"
+				[language]="codeTab() === 'typescript' ? 'TypeScript' : codeTab() === 'html' ? 'HTML' : 'JSON'"
+			/>
+		</section>
+	</div>
+</div>

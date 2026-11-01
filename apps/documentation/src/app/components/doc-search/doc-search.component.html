@@ -1,0 +1,71 @@
+<button
+	class="search-trigger"
+	type="button"
+	(click)="open()"
+	aria-haspopup="dialog"
+	aria-label="Search documentation (Control or Command K)"
+>
+	<span aria-hidden="true">&#8981;</span><span class="trigger-label">Search documentation...</span><kbd>Ctrl K</kbd>
+</button>
+<dialog #dialog aria-labelledby="search-title" (cancel)="close()">
+	<div class="search-heading">
+		<h2 id="search-title">Search documentation</h2>
+		<button type="button" (click)="close()" aria-label="Close search">Esc</button>
+	</div>
+	<label class="sr-only" for="doc-search-input">Search pages, APIs and releases</label>
+	<input
+		#searchInput
+		id="doc-search-input"
+		type="search"
+		autocomplete="off"
+		placeholder="Try rangeConstraints, themes, forms..."
+		[value]="query()"
+		(input)="update(searchInput.value)"
+		(keydown)="key($event)"
+		role="combobox"
+		aria-autocomplete="list"
+		aria-controls="search-results"
+		aria-expanded="true"
+		[attr.aria-activedescendant]="results().length ? 'search-result-' + selected() : null"
+	/>
+	<div class="search-status" role="status">
+		@if (loading()) {
+			Loading search index...
+		} @else if (error()) {
+			{{ error() }} <button type="button" (click)="open()">Retry</button>
+		} @else {
+			{{ results().length }} results
+			@if (!query()) {
+				&middot; Browse pages or start typing
+			}
+		}
+	</div>
+	<div id="search-results" role="listbox" aria-label="Documentation results">
+		@for (result of results(); track result.id; let index = $index) {
+			<button
+				type="button"
+				tabindex="-1"
+				role="option"
+				[id]="'search-result-' + index"
+				[attr.aria-selected]="selected() === index"
+				(pointermove)="selected.set(index)"
+				(click)="go(index)"
+			>
+				<small>{{ result.category }}</small
+				><strong>
+					@for (part of parts(result.title); track $index) {
+						@if (part.match) {
+							<mark>{{ part.text }}</mark>
+						} @else {
+							{{ part.text }}
+						}
+					}</strong
+				><span>{{ result.text.slice(0, 160) }}</span>
+			</button>
+		}
+		@if (!loading() && !error() && !results().length) {
+			<p class="empty">No results for &ldquo;{{ query() }}&rdquo;. Try a shorter term or browse the sidebar.</p>
+		}
+	</div>
+	<footer>Use arrow keys to navigate. Enter to open. Escape to close.</footer>
+</dialog>

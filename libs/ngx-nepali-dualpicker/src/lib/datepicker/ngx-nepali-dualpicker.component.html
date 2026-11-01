@@ -1,0 +1,470 @@
+<div
+	class="nepali-date-picker"
+	[class.dark-mode]="isDarkMode()"
+	[class.mobile-compact]="isMobileCompact()"
+	[attr.dir]="direction()"
+>
+	<div class="input-container" [class.input-container--inline]="mergedConfig().inline" #inputContainer>
+		<input
+			#dateInput
+			type="text"
+			[id]="inputId()"
+			[attr.role]="mergedConfig().inline ? null : 'combobox'"
+			[attr.aria-controls]="!mergedConfig().inline && isOpen() ? popupId() : null"
+			[attr.aria-autocomplete]="mergedConfig().inline ? null : 'none'"
+			[attr.aria-describedby]="helpId() + (inputError() || validationMessage() ? ' ' + errorId() : '')"
+			[attr.aria-errormessage]="inputError() || validationMessage() ? errorId() : null"
+			[attr.aria-readonly]="!canEditInput()"
+			[attr.aria-label]="
+				mergedConfig().ariaLabels.input || (dateInput.labels?.length ? null : effectivePlaceholder())
+			"
+			[attr.aria-expanded]="mergedConfig().inline ? null : isOpen()"
+			[attr.aria-haspopup]="mergedConfig().inline ? null : 'dialog'"
+			[attr.aria-invalid]="hasError() || !!inputError() || !!validationErrors()"
+			class="datepicker-input"
+			[placeholder]="effectivePlaceholder()"
+			[value]="mergedConfig().language === 'ne' ? (displayedInputValue() | nepaliNumeral) : displayedInputValue()"
+			(input)="onInputChange($event)"
+			(focus)="onFocus()"
+			(click)="!canEditInput() && open()"
+			(blur)="onBlur()"
+			[class.has-error]="hasError() || !!inputError() || !!validationErrors()"
+			[disabled]="isDisabled()"
+			[readOnly]="!canEditInput()"
+			[attr.inputmode]="canEditInput() ? 'text' : 'none'"
+		/>
+
+		@if (formattedDate() && mergedConfig().showClearButton && !mergedConfig().readOnly) {
+			<button
+				type="button"
+				[disabled]="isDisabled()"
+				class="clear-icon"
+				(click)="clearSelection()"
+				[attr.aria-label]="effectiveAriaLabels().clearDate"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+					focusable="false"
+				>
+					<path d="m6 6 12 12M18 6 6 18" />
+				</svg>
+			</button>
+		}
+
+		@if (!mergedConfig().inline) {
+			<button
+				type="button"
+				[disabled]="isDisabled()"
+				class="form-icon"
+				[attr.aria-controls]="isOpen() ? popupId() : null"
+				[attr.aria-expanded]="isOpen()"
+				[attr.aria-haspopup]="mergedConfig().inline ? null : 'dialog'"
+				(click)="toggleOpen()"
+				[ngClass]="{ active: isOpen() }"
+				[attr.aria-label]="effectiveAriaLabels().calendar"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+					focusable="false"
+				>
+					<rect x="3" y="5" width="18" height="16" rx="2.5" />
+					<path d="M8 3v4m8-4v4M3 11h18" />
+					<path d="M8 15h2m4 0h2m-8 3h2" />
+				</svg>
+			</button>
+		}
+	</div>
+
+	<p class="ndp-sr-only" [id]="helpId()">{{ formatDescription() }}</p>
+	<p class="ndp-sr-only" role="status" aria-live="polite" aria-atomic="true">{{ announcement() }}</p>
+	@if ((inputError() || validationMessage()) && !isOpen() && !mergedConfig().inline) {
+		<p class="datepicker-input-error" [id]="errorId()" role="alert">
+			{{ inputError()?.message || validationMessage() }}
+		</p>
+	}
+	@if (isOpen() || mergedConfig().inline) {
+		<div
+			class="datepicker__container"
+			[id]="popupId()"
+			[ngClass]="{
+				'position-bottom-right': mergedConfig().popupPosition === 'bottom-right',
+				'position-top-left': mergedConfig().popupPosition === 'top-left',
+				'position-top-right': mergedConfig().popupPosition === 'top-right',
+				'position-fixed': !mergedConfig().inline,
+				inline: mergedConfig().inline,
+			}"
+			[class.opens-above]="!mergedConfig().inline && !isMobileCompact() && popupOpensTop()"
+			[style.top.px]="!mergedConfig().inline && !isMobileCompact() ? dropdownTop() : null"
+			[style.left.px]="!mergedConfig().inline && !isMobileCompact() ? dropdownLeft() : null"
+			[style.width.px]="!mergedConfig().inline && !isMobileCompact() ? dropdownWidth() : null"
+			[style.max-height.px]="!mergedConfig().inline && !isMobileCompact() ? popupMaxHeight() : null"
+			[style.visibility]="!mergedConfig().inline && dropdownTop() === null ? 'hidden' : null"
+			(focusout)="onPanelFocusOut($event)"
+			(keydown)="onPanelKeyDown($event)"
+			[attr.role]="mergedConfig().inline ? 'group' : 'dialog'"
+			[attr.aria-label]="effectiveAriaLabels().calendar"
+		>
+			<h2 class="ndp-sr-only" [id]="headingId()" aria-live="polite" aria-atomic="true">
+				{{ calendarHeading() }}
+			</h2>
+			<!-- Calendar Type Toggle -->
+			@if (mergedConfig().convertOnCalendarChange) {
+				<div class="datepicker__calendar-toggle">
+					<button
+						[disabled]="isDisabled() || mergedConfig().readOnly"
+						class="calendar-type-btn"
+						[ngClass]="{ active: currentCalendarType() === 'BS' }"
+						(click)="switchCalendarType('BS')"
+						type="button"
+						[attr.aria-label]="
+							currentCalendarType() === 'BS'
+								? 'BS'
+								: mergedConfig().language === 'ne'
+									? 'BS ?????? ??????????'
+									: 'BS, switch to Bikram Sambat calendar'
+						"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+							<line x1="16" y1="2" x2="16" y2="6"></line>
+							<line x1="8" y1="2" x2="8" y2="6"></line>
+							<line x1="3" y1="10" x2="21" y2="10"></line>
+						</svg>
+						BS
+					</button>
+					<button
+						[disabled]="isDisabled() || mergedConfig().readOnly"
+						class="calendar-type-btn"
+						[ngClass]="{ active: currentCalendarType() === 'AD' }"
+						(click)="switchCalendarType('AD')"
+						type="button"
+						[attr.aria-label]="
+							currentCalendarType() === 'AD'
+								? 'AD'
+								: mergedConfig().language === 'ne'
+									? 'AD ?????? ??????????'
+									: 'AD, switch to Gregorian calendar'
+						"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<circle cx="12" cy="12" r="10"></circle>
+							<polyline points="12 6 12 12 16 14"></polyline>
+						</svg>
+						AD
+					</button>
+					<button
+						[disabled]="isDisabled()"
+						class="calendar-convert-btn"
+						(click)="toggleCalendarType()"
+						type="button"
+						[attr.aria-label]="'Convert between calendars'"
+						title="Auto-convert dates"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<polyline points="23 4 23 10 17 10"></polyline>
+							<polyline points="1 20 1 14 7 14"></polyline>
+							<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+						</svg>
+					</button>
+				</div>
+			}
+
+			@if (mergedConfig().showSelectionModeToggle) {
+				<div class="datepicker__mode-switch">
+					<button
+						[disabled]="isDisabled() || mergedConfig().readOnly"
+						class="mode-btn"
+						[ngClass]="{ active: !rangeMode() && !multipleMode() }"
+						(click)="toggleMode('single')"
+						type="button"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+							<line x1="16" y1="2" x2="16" y2="6"></line>
+							<line x1="8" y1="2" x2="8" y2="6"></line>
+							<line x1="3" y1="10" x2="21" y2="10"></line>
+						</svg>
+						Single Date
+					</button>
+					<button
+						[disabled]="isDisabled() || mergedConfig().readOnly"
+						class="mode-btn"
+						[ngClass]="{ active: rangeMode() }"
+						(click)="toggleMode('range')"
+						type="button"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+							<line x1="16" y1="2" x2="16" y2="6"></line>
+							<line x1="8" y1="2" x2="8" y2="6"></line>
+							<line x1="3" y1="10" x2="21" y2="10"></line>
+							<line x1="8" y1="14" x2="16" y2="14"></line>
+						</svg>
+						Range
+					</button>
+					<button
+						[disabled]="isDisabled() || mergedConfig().readOnly"
+						class="mode-btn"
+						[ngClass]="{ active: multipleMode() }"
+						(click)="toggleMode('multiple')"
+						type="button"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+							<line x1="16" y1="2" x2="16" y2="6"></line>
+							<line x1="8" y1="2" x2="8" y2="6"></line>
+							<line x1="3" y1="10" x2="21" y2="10"></line>
+							<circle cx="8" cy="14" r="1"></circle>
+							<circle cx="12" cy="14" r="1"></circle>
+							<circle cx="16" cy="14" r="1"></circle>
+						</svg>
+						Multiple
+					</button>
+				</div>
+			}
+
+			<div class="datepicker__options-container">
+				<span class="datepicker__options-month-container">
+					<button
+						[disabled]="isDisabled()"
+						#periodToggle
+						class="picker-toggle"
+						[attr.aria-expanded]="showMonthYearPicker()"
+						[attr.aria-controls]="showMonthYearPicker() ? popupId() + '-periods' : null"
+						[attr.aria-label]="periodLabel()"
+						[class.dropdown-open]="showMonthYearPicker()"
+						(click)="toggleMonthYearPicker(); $event.stopPropagation()"
+						type="button"
+					>
+						<span>{{ getCurrentMonthLabel() }}</span>
+						{{ ' ' }}
+						<span>{{
+							mergedConfig().language === 'ne'
+								? (currentDisplayDate.year | nepaliNumeral)
+								: currentDisplayDate.year
+						}}</span>
+						<svg
+							class="picker-toggle--icon"
+							[class.rotated]="showMonthYearPicker()"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<polyline points="6,9 12,15 18,9"></polyline>
+						</svg>
+					</button>
+				</span>
+
+				@if (mergedConfig().showTodayButton) {
+					<button
+						type="button"
+						[disabled]="isDisabled() || mergedConfig().readOnly || todayUnavailable()"
+						class="select-today"
+						[title]="todayUnavailable() ? words().todayUnavailable : effectiveAriaLabels().today"
+						(click)="selectToday()"
+						[attr.aria-label]="effectiveAriaLabels().today"
+					>
+						<svg
+							aria-hidden="true"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							focusable="false"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="5" width="18" height="16" rx="3" />
+							<path d="M7 3v4m10-4v4M3 11h18" />
+							<circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="none" /></svg
+						><span>{{ mergedConfig().language === 'ne' ? 'आज' : 'Today' }}</span>
+					</button>
+				}
+
+				<button
+					type="button"
+					[disabled]="isDisabled() || !canNavigateMonth(-1)"
+					class="prev-month"
+					[attr.aria-disabled]="!canNavigateMonth(-1)"
+					(click)="previousMonth()"
+					[attr.aria-label]="effectiveAriaLabels().previousMonth"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="8" height="8">
+						<path
+							d="M224 480c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25l192-192c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l169.4 169.4c12.5 12.5 12.5 32.75 0 45.25C240.4 476.9 232.2 480 224 480z"
+						/>
+					</svg>
+				</button>
+				<button
+					type="button"
+					[disabled]="isDisabled() || !canNavigateMonth(1)"
+					class="next-month"
+					[attr.aria-disabled]="!canNavigateMonth(1)"
+					(click)="nextMonth()"
+					[attr.aria-label]="effectiveAriaLabels().nextMonth"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+						<path
+							d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z"
+						/>
+					</svg>
+				</button>
+			</div>
+
+			@if (inputError() || validationMessage()) {
+				<p class="datepicker-input-error datepicker__feedback" [id]="errorId()" role="alert">
+					{{ inputError()?.message || validationMessage() }}
+				</p>
+			}
+			@if (noAvailableDates()) {
+				<p class="datepicker__status" role="status">{{ words().noAvailability }}</p>
+			} @else if (todayUnavailable() && mergedConfig().showTodayButton) {
+				<p class="datepicker__status">{{ words().todayUnavailable }}</p>
+			}
+			@if (selectionNotice()) {
+				<p class="datepicker__status datepicker__notice" role="status">{{ selectionNotice() }}</p>
+			}
+			@if (multipleMode()) {
+				<p class="datepicker__status" role="status" aria-live="polite">{{ selectionSummary() }}</p>
+			}
+			@if (!mergedConfig().inline) {
+				<div class="datepicker__dismiss">
+					<button type="button" (click)="close(true, true)">{{ words().close }}</button>
+				</div>
+			}
+
+			<div class="datepicker__body">
+				@if (showMonthYearPicker()) {
+					<ndp-month-year-panel
+						[id]="popupId() + '-periods'"
+						[todayMonth]="getTodayDate().month"
+						[todayYear]="getTodayDate().year"
+						[months]="
+							currentMonthsMapping()[mergedConfig().language][mergedConfig().monthLabelFormat] ?? []
+						"
+						[years]="years"
+						[disabledMonths]="disabledMonths()"
+						[month]="currentDisplayDate.month"
+						[year]="currentDisplayDate.year"
+						[language]="mergedConfig().language"
+						[disabled]="isDisabled()"
+						(monthSelected)="selectMonth($event)"
+						(yearSelected)="selectYear($event)"
+					/>
+				}
+				@if (showDayPicker()) {
+					<ndp-calendar-grid
+						[cellTemplate]="dateCellTemplate()?.template || null"
+						[rows]="calendarRows()"
+						[weekdays]="rotatedDayNames()"
+						[weekdayLabels]="fullDayNames()"
+						[labelledBy]="headingId()"
+						[readOnly]="mergedConfig().readOnly"
+						[multiselectable]="rangeMode() || multipleMode()"
+						[focusedDay]="tabStop()"
+						[disabled]="isDisabled()"
+						[label]="getCurrentMonthLabel() + ' ' + currentDisplayDate.year"
+						(daySelected)="selectDate($event)"
+						(dayFocused)="onCalendarFocus($event)"
+						(dayHovered)="$event === null ? onDateLeave() : onDateHover($event)"
+						(navigate)="onCalendarKey($event)"
+					/>
+				}
+				@if (mergedConfig().presets.length) {
+					<div class="datepicker__presets">
+						@for (preset of mergedConfig().presets; track $index) {
+							<button
+								type="button"
+								[disabled]="isDisabled() || mergedConfig().readOnly"
+								(click)="selectPreset(preset)"
+							>
+								{{ preset.label }}
+							</button>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	}
+</div>

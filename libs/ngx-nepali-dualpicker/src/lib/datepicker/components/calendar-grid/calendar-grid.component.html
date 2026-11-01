@@ -1,0 +1,73 @@
+<div
+	role="grid"
+	[attr.aria-label]="labelledBy ? null : label"
+	[attr.aria-labelledby]="labelledBy || null"
+	[attr.aria-readonly]="readOnly"
+	[attr.aria-multiselectable]="multiselectable"
+	(keydown)="onKey($event)"
+>
+	<div class="calendar-row" role="row">
+		@for (weekday of weekdays; track $index) {
+			<div class="datepicker__weekday" role="columnheader" [attr.aria-label]="weekdayLabels[$index] || weekday">
+				{{ weekday }}
+			</div>
+		}
+	</div>
+	@for (row of rows; track $index) {
+		<div class="calendar-row" role="row">
+			@for (cell of row; track $index) {
+				<div
+					class="datepicker__date-container"
+					[class.datepicker__date-container--dual]="!!cell.secondaryLabel || !!cellTemplate"
+					[class.datepicker__date-container--before]="
+						cell.selectable && cell.classes['datepicker__date--range-before']
+					"
+					[class.datepicker__date-container--after]="
+						cell.selectable && cell.classes['datepicker__date--range-after']
+					"
+					[class.datepicker__date-container--preview]="cell.classes['datepicker__date--range-preview']"
+					role="gridcell"
+					[attr.aria-selected]="cell.day ? cell.selected : null"
+				>
+					@if (cell.day !== null) {
+						<button
+							type="button"
+							role="button"
+							class="datepicker__date"
+							[ngClass]="cell.classes"
+							[disabled]="disabled"
+							[attr.aria-disabled]="disabled || readOnly || !cell.selectable"
+							[attr.aria-current]="cell.today ? 'date' : null"
+							[attr.aria-label]="cell.accessibleLabel"
+							[attr.aria-describedby]="cellTemplate ? labelledBy + '-content-' + cell.day : null"
+							[attr.data-calendar-day]="cell.day"
+							[tabIndex]="!disabled && cell.day === focusedDay ? 0 : -1"
+							(focus)="dayFocused.emit(cell.day)"
+							(click)="select(cell)"
+							(mouseenter)="dayHovered.emit(cell.day)"
+							(mouseleave)="dayHovered.emit(null)"
+						>
+							<span class="datepicker__date-face">
+								@if (cellTemplate && cell.context) {
+									<span [id]="labelledBy + '-content-' + cell.day">
+										<ng-container
+											[ngTemplateOutlet]="cellTemplate"
+											[ngTemplateOutletContext]="cell.context"
+										/>
+									</span>
+								} @else {
+									<span class="primary-date">{{ cell.label }}</span>
+									@if (cell.secondaryLabel) {
+										<small class="secondary-date" aria-hidden="true">{{
+											cell.secondaryLabel
+										}}</small>
+									}
+								}
+							</span>
+						</button>
+					}
+				</div>
+			}
+		</div>
+	}
+</div>

@@ -1,0 +1,89 @@
+<div class="dual-picker-container">
+	<div
+		class="period-switch"
+		role="group"
+		[attr.aria-label]="language === 'ne' ? 'महिना वा साल छान्नुहोस्' : 'Choose month or year'"
+	>
+		<button
+			type="button"
+			[disabled]="disabled"
+			[attr.aria-pressed]="view() === 'months'"
+			(click)="activate('months')"
+		>
+			{{ language === 'ne' ? 'महिना' : 'Month' }}
+		</button>
+		<button
+			type="button"
+			[disabled]="disabled"
+			[attr.aria-pressed]="view() === 'years'"
+			(click)="activate('years')"
+		>
+			{{ language === 'ne' ? 'साल' : 'Year' }}
+		</button>
+	</div>
+	<p class="period-hint">
+		{{
+			view() === 'months'
+				? language === 'ne'
+					? 'महिना छान्नुहोस्'
+					: 'Choose a month'
+				: language === 'ne'
+					? 'साल छान्नुहोस्'
+					: 'Choose a year, then a month'
+		}}
+		<span>{{ language === 'ne' ? (year | nepaliNumeral) : year }}</span>
+	</p>
+	@if (view() === 'months') {
+		<div
+			class="month-picker-column"
+			#monthColumn
+			role="group"
+			[attr.aria-label]="language === 'ne' ? 'महिना' : 'Months'"
+			(keydown)="onGridKey($event)"
+		>
+			@for (label of months; track $index) {
+				<button
+					type="button"
+					class="month-item"
+					[class.selected]="$index === month"
+					[class.current-month]="year === todayYear && $index === todayMonth"
+					[disabled]="disabled || disabledMonths.includes($index)"
+					[attr.data-month-index]="$index"
+					[attr.aria-pressed]="$index === month"
+					[attr.aria-current]="year === todayYear && $index === todayMonth ? 'true' : null"
+					[tabIndex]="$index === focusableMonth ? 0 : -1"
+					(focus)="monthFocus.set($index)"
+					(click)="monthSelected.emit($index)"
+				>
+					{{ label }}
+				</button>
+			}
+		</div>
+	} @else {
+		<div
+			class="year-picker-column"
+			#yearColumn
+			role="group"
+			[attr.aria-label]="language === 'ne' ? 'साल' : 'Years'"
+			(keydown)="onGridKey($event)"
+		>
+			@for (value of years; track value) {
+				<button
+					type="button"
+					class="year-item"
+					[class.selected]="value === year"
+					[class.current-year]="value === todayYear"
+					[disabled]="disabled"
+					[attr.data-year]="value"
+					[attr.aria-pressed]="value === year"
+					[attr.aria-current]="value === todayYear ? 'true' : null"
+					[tabIndex]="value === (yearFocus() ?? (years.includes(year) ? year : years[0])) ? 0 : -1"
+					(focus)="yearFocus.set(value)"
+					(click)="chooseYear(value)"
+				>
+					{{ language === 'ne' ? (value | nepaliNumeral) : value }}
+				</button>
+			}
+		</div>
+	}
+</div>

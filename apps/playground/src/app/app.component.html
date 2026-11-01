@@ -1,0 +1,15 @@
+<div class="site" [class.dark]="dark()">
+	<a class="skip-link" href="#main-content">Skip to content</a>
+	<header class="site-header">
+		<a class="brand" href="/">Nepali Date Playground</a>
+		<nav class="header-actions" aria-label="Project links">
+			<span class="version">v{{ metadata.version }}</span> <a [href]="appLinks.documentation">Documentation ?</a
+			><a [href]="metadata.repository" target="_blank" rel="noopener noreferrer">GitHub ?</a>
+			<button type="button" (click)="toggleDark()" [attr.aria-pressed]="dark()">
+				{{ dark() ? 'Light' : 'Dark' }}
+			</button>
+		</nav>
+	</header>
+	<main id="main-content" tabindex="-1"><router-outlet /></main>
+	<footer class="site-footer">ngx-nepali-dualpicker ? Interactive configuration and code generation</footer>
+</div>

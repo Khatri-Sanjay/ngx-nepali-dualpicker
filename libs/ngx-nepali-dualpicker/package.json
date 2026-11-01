@@ -1,0 +1,46 @@
+{
+    "name": "ngx-nepali-dualpicker",
+    "version": "2.0.0-next.0",
+    "description": "Angular datepicker for Bikram Sambat (BS) and Gregorian (AD) calendars, with conversion, range and multiple selection.",
+    "keywords": [
+        "angular nepali date picker",
+        "angular bs date picker",
+        "bikram sambat angular",
+        "bs to ad converter angular",
+        "nepali calendar angular",
+        "angular range date picker",
+        "angular multiple date picker",
+        "ngx nepali calendar",
+        "bikram sambat date picker",
+        "bs date picker",
+        "ad date picker",
+        "nepali calendar"
+    ],
+    "author": {
+        "name": "Sanjay Khatri",
+        "url": "https://khatrisanjay.com.np/"
+    },
+    "homepage": "https://khatri-sanjay.github.io/nepali-dualpicker-demo/",
+    "bugs": {
+        "url": "https://github.com/Khatri-Sanjay/ngx-nepali-pickers/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Khatri-Sanjay/ngx-nepali-pickers.git",
+        "directory": "libs/ngx-nepali-dualpicker"
+    },
+    "license": "MIT",
+    "peerDependencies": {
+        "@angular/common": ">=17.0.0 <23.0.0",
+        "@angular/core": ">=17.0.0 <23.0.0",
+        "@angular/forms": ">=17.0.0 <23.0.0",
+        "rxjs": "^6.5.3 || ^7.4.0"
+    },
+    "dependencies": {
+        "tslib": "^2.6.0"
+    },
+    "sideEffects": false,
+    "publishConfig": {
+        "access": "public"
+    }
+}

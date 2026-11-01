@@ -1,0 +1,50 @@
+<section aria-label="Live playground" class="embed-shell">
+	@if (url) {
+		<div class="actions">
+			<a [href]="url" target="_blank" rel="noopener noreferrer">Open full playground &#8599;</a
+			><button type="button" (click)="open()">Load embedded playground</button>
+		</div>
+		<p>
+			The embedded app loads on request. If your deployment blocks frames or the local server is stopped, use the
+			full playground link. No connection is required for the examples on this page.
+		</p>
+		@if (frame(); as frameUrl) {
+			<div class="preview-toolbar" role="group" aria-label="Embedded preview controls">
+				<span>Live playground</span
+				><button type="button" [attr.aria-pressed]="narrow()" (click)="narrow.set(!narrow())">
+					Phone width</button
+				><button type="button" (click)="close()">Close preview</button>
+			</div>
+			@if (!loaded() && !failed()) {
+				<p role="status">
+					{{
+						slow()
+							? 'Taking longer than expected. Open the full playground using the link above.'
+							: 'Loading playground...'
+					}}
+				</p>
+			}
+			@if (failed()) {
+				<p role="alert">The playground could not load. Open it in a separate tab.</p>
+			}
+			<div class="frame-viewport" [class.narrow]="narrow()">
+				<iframe
+					[src]="frameUrl"
+					title="Nepali Dualpicker live configuration playground"
+					loading="lazy"
+					allow="clipboard-write"
+					(load)="finish()"
+					(error)="finish(true)"
+				></iframe>
+			</div>
+			<p class="frame-help">
+				Blank or blocked preview? The full playground link works independently of this frame.
+			</p>
+		}
+	} @else {
+		<p>
+			The production playground URL has not been configured. Run <code>npm run start:all</code> locally, or use
+			the working examples below. Set playgroundUrl in site.config.json before publishing.
+		</p>
+	}
+</section>

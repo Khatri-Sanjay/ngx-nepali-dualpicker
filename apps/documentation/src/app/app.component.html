@@ -1,0 +1,120 @@
+<div class="site" [class.dark]="dark()">
+	<a class="skip-link" href="#main-content">Skip to content</a>
+	<header class="site-header" [inert]="menuOpen()">
+		<a class="brand" routerLink="/introduction" aria-label="Nepali Dualpicker documentation home"
+			><span class="brand-mark" aria-hidden="true">N<span>2</span></span
+			><span>Nepali Dualpicker<small>ANGULAR CALENDAR TOOLKIT</small></span></a
+		>
+		<app-doc-search [disabled]="menuOpen()" />
+		<nav class="header-actions" aria-label="Project links">
+			<a routerLink="/introduction" routerLinkActive="current">Docs</a>
+			@if (site.playground) {
+				<a [href]="site.playground" target="_blank" rel="noopener noreferrer"
+					>Playground <span aria-hidden="true">&rarr;</span></a
+				>
+			}
+			<a [href]="metadata.npm" target="_blank" rel="noopener noreferrer"
+				>npm <span aria-hidden="true">&rarr;</span></a
+			>
+			@if (site.repository) {
+				<a [href]="site.repository" target="_blank" rel="noopener noreferrer">GitHub</a>
+			}
+			<button
+				type="button"
+				class="theme-toggle"
+				(click)="toggleDark()"
+				[attr.aria-pressed]="dark()"
+				aria-label="Toggle documentation dark mode"
+			>
+				{{ dark() ? 'Light' : 'Dark' }}
+			</button>
+			<button
+				#menuButton
+				class="menu-toggle"
+				type="button"
+				(click)="toggleMenu()"
+				[attr.aria-expanded]="menuOpen()"
+				aria-controls="docs-sidebar"
+			>
+				Menu
+			</button>
+		</nav>
+	</header>
+	<div class="version-notice" [inert]="menuOpen()">
+		<span class="version-tag">NEXT {{ metadata.version }}</span
+		><span
+			>Unreleased workspace documentation. Published npm latest: <strong>{{ site.registry.latest }}</strong
+			>.</span
+		><a routerLink="/installation">Installation options <span aria-hidden="true">&rarr;</span></a>
+	</div>
+	<div class="site-body">
+		@if (menuOpen()) {
+			<button
+				class="drawer-scrim"
+				type="button"
+				(click)="closeMenu()"
+				aria-label="Close documentation navigation"
+			></button>
+		}
+		<aside
+			#sidebar
+			id="docs-sidebar"
+			class="sidebar"
+			[class.mobile-open]="menuOpen()"
+			[attr.role]="menuOpen() ? 'dialog' : null"
+			[attr.aria-modal]="menuOpen() ? 'true' : null"
+			aria-label="Documentation navigation"
+		>
+			<div class="drawer-heading">
+				<strong>Documentation</strong><button type="button" (click)="closeMenu()">Close</button>
+			</div>
+			<div class="sidebar-version">
+				<span class="status-dot" aria-hidden="true"></span> {{ metadata.version }} <span>Next</span>
+			</div>
+			<nav aria-label="Documentation pages">
+				@for (group of groups; track group) {
+					<div class="nav-section">
+						<button
+							class="nav-group"
+							type="button"
+							[attr.aria-expanded]="!collapsed().includes(group)"
+							(click)="toggleGroup(group)"
+						>
+							<span>{{ group }}</span
+							><span aria-hidden="true">{{ collapsed().includes(group) ? '+' : '-' }}</span>
+						</button>
+						<div class="nav-pages" [hidden]="collapsed().includes(group)">
+							@for (page of pagesFor(group); track page.id) {
+								<a
+									[routerLink]="page.path"
+									routerLinkActive="active"
+									[routerLinkActiveOptions]="{ exact: true }"
+									ariaCurrentWhenActive="page"
+									(click)="navigate()"
+									>{{ page.title }}</a
+								>
+							}
+						</div>
+					</div>
+				}
+			</nav>
+			<div class="sidebar-footer">
+				<span>Built from the public API.</span
+				><a routerLink="/documentation-maintenance"
+					>Documentation maintenance <span aria-hidden="true">&rarr;</span></a
+				>
+			</div>
+		</aside>
+		<main id="main-content" tabindex="-1" [inert]="menuOpen()"><router-outlet /></main>
+	</div>
+	<footer class="site-footer" [inert]="menuOpen()">
+		<span
+			>ngx-nepali-dualpicker <span aria-hidden="true">&middot;</span>
+			<a [href]="site.baseHref + 'assets/library-license.txt'">MIT license</a></span
+		>
+		<nav aria-label="Documentation resources">
+			<a routerLink="/changelog">Changelog</a><a routerLink="/migration">Migration</a
+			><a routerLink="/contributing">Contribute</a><a routerLink="/security">Security</a>
+		</nav>
+	</footer>
+</div>

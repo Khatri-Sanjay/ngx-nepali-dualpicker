@@ -1,0 +1,61 @@
+{
+    "results": [
+        {
+            "dir": "ltr",
+            "inline": false,
+            "geometry": {
+                "direction": "ltr",
+                "clearLeft": 245,
+                "calendarLeft": 289,
+                "clearWidth": 44,
+                "calendarWidth": 44,
+                "overlap": 0,
+                "paddingEnd": "96px",
+                "coarse": true
+            },
+            "heights": [44, 44]
+        },
+        {
+            "dir": "ltr",
+            "inline": true,
+            "geometry": {
+                "direction": "ltr",
+                "clearLeft": 289,
+                "clearWidth": 44,
+                "overlap": 0,
+                "paddingEnd": "52px",
+                "coarse": true
+            },
+            "heights": [44, 44]
+        },
+        {
+            "dir": "rtl",
+            "inline": false,
+            "geometry": {
+                "direction": "rtl",
+                "clearLeft": 86,
+                "calendarLeft": 42,
+                "clearWidth": 44,
+                "calendarWidth": 44,
+                "overlap": 0,
+                "paddingEnd": "96px",
+                "coarse": true
+            },
+            "heights": [44, 44]
+        },
+        {
+            "dir": "rtl",
+            "inline": true,
+            "geometry": {
+                "direction": "rtl",
+                "clearLeft": 42,
+                "clearWidth": 44,
+                "overlap": 0,
+                "paddingEnd": "52px",
+                "coarse": true
+            },
+            "heights": [44, 44]
+        }
+    ],
+    "errors": []
+}
