@@ -22,6 +22,11 @@ export const currentChanges = [
 	},
 	{
 		category: 'Changed',
+		text: 'Use logical input/icon spacing in RTL, keep touch Month/Year controls at 44px, restrict month navigation to date bounds in both calendars, and synchronize browser-driven popover dismissal with component state.',
+		breaking: false,
+	},
+	{
+		category: 'Changed',
 		text: 'Breaking: standardize configuration names (`calendar`, `selectionMode`, `readOnly`, `allowTextInput`, `showSecondaryDate`, `convertOnCalendarChange`, `popupPosition`, `mobilePresentation`, `multipleSelection`, and `bsYearRange`) with no legacy aliases. Rename label formats, range-crossing and previous-month options, expand theme background names/CSS properties, replace `CalendarType` with `CalendarSystem`, and correct `Calendar.BD` to `Calendar.BS`. See the configuration migration table.',
 		breaking: true,
 	},

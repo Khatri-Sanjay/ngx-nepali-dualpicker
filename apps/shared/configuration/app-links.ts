@@ -1,2 +1,3 @@
 /** Set the public origins before deploying the apps. */
-export const appLinks = { playground: 'http://localhost:4200', documentation: 'http://localhost:4201' } as const;
+import config from './app-links.config.json';
+export const appLinks = config;

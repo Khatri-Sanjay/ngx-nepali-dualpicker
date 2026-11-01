@@ -48,6 +48,8 @@ ESLint checks TypeScript and inline/external Angular templates. Prettier owns fo
 
 ## Structure
 
+For separate documentation and playground deployments on Vercel, follow [the Vercel setup guide](docs/VERCEL-DEPLOYMENT.md). Both projects use the repository root, with `NDP_DEPLOY_APP` selecting the app and environment variables supplying the confirmed public origins.
+
 The publishable library lives under `libs/`; the interactive playground app lives under `apps/`. Root configuration, dependencies, formatting and linting are shared. The playground imports the built library's public API. Build either target with `npm run build:lib` or `npm run build:playground` (build the library first).
 
 ```text

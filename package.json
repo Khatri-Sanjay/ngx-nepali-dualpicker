@@ -41,7 +41,9 @@
         "docs:registry": "node scripts/refresh-doc-registry.mjs && npm run docs:data",
         "prebuild:docs": "npm run docs:api && npm run docs:data",
         "check:docs-site": "node scripts/check-doc-site.mjs",
-        "check:docs-browser": "node scripts/check-doc-browser.mjs"
+        "check:docs-browser": "node scripts/check-doc-browser.mjs",
+        "build:vercel": "node scripts/build-vercel.mjs",
+        "check:vercel": "node scripts/check-vercel-output.mjs"
     },
     "private": true,
     "dependencies": {
@@ -85,7 +87,7 @@
         "typescript-eslint": "^8.71.0"
     },
     "engines": {
-        "node": ">=20.19.0 <21",
+        "node": ">=20.19.0 <21 || >=24 <25",
         "npm": ">=10 <12"
     }
 }

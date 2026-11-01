@@ -9,7 +9,16 @@ import { fileURLToPath } from 'node:url';
 
 export default tseslint.config(
 	{
-		ignores: ['node_modules/**', 'dist/**', 'tmp/**', 'out-tsc/**', 'coverage/**', '.angular/**', '.husky/_/**'],
+		ignores: [
+			'node_modules/**',
+			'dist/**',
+			'.vercel/**',
+			'tmp/**',
+			'out-tsc/**',
+			'coverage/**',
+			'.angular/**',
+			'.husky/_/**',
+		],
 	},
 	{
 		files: ['**/*.{js,cjs,mjs}'],
