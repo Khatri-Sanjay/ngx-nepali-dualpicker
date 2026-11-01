@@ -38,9 +38,13 @@ if (app === 'documentation') {
 	assert.equal(html.includes('rel="canonical"'), !preview);
 	if (!preview) assert(html.includes(process.env.NDP_DOCS_URL.replace(/\/$/, '')));
 } else {
-	assert.equal(resolve('/playground'), 200);
+	assert.equal(resolve('/playground'), 308);
 	assert.equal(resolve('/nested/client-route'), 200);
-	assert(readFileSync(path.join(root, 'robots.txt'), 'utf8').includes('Disallow: /'));
+	const html = readFileSync(path.join(root, 'index.html'), 'utf8');
+	assert(html.includes('<h1'), 'Playground must contain prerendered content.');
+	assert.equal(html.includes('rel="canonical"'), !preview);
+	assert.equal(readFileSync(path.join(root, 'robots.txt'), 'utf8').includes('Disallow: /'), preview);
+	assert.equal(html.includes('noindex,nofollow'), preview);
 }
 console.log(
 	`PASS: ${app} Vercel artifact routing, assets and indexing policy (${preview ? 'preview' : 'production'}).`,

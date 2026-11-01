@@ -16,6 +16,37 @@ class AuditHost {
 	@ViewChild(NgxNepaliDualpicker) picker!: NgxNepaliDualpicker;
 }
 describe('UI audit regressions', () => {
+	it('preserves selection when the active mode is clicked again', () => {
+		const { fixture, host, picker } = create({ inline: true, showSelectionModeToggle: true });
+		picker.writeValue('2024-06-15');
+		fixture.detectChanges();
+		const value = picker.formattedDate();
+		const selected = spyOn(picker.dateSelected, 'emit');
+		host.querySelector<HTMLButtonElement>('.mode-btn')!.click();
+		fixture.detectChanges();
+		expect(picker.formattedDate()).toBe(value);
+		expect(picker.selectedDate()?.day).toBe(15);
+		expect(selected).not.toHaveBeenCalled();
+		fixture.destroy();
+	});
+	it('exposes the active calendar and selection mode', () => {
+		const { fixture, host, picker } = create({
+			inline: true,
+			convertOnCalendarChange: true,
+			showSelectionModeToggle: true,
+		});
+		const states = (selector: string) =>
+			Array.from(host.querySelectorAll(selector)).map((button) => button.getAttribute('aria-pressed'));
+		expect(states('.calendar-type-btn')).toEqual(['false', 'true']);
+		expect(states('.mode-btn')).toEqual(['true', 'false', 'false']);
+		picker.toggleMode('range');
+		fixture.detectChanges();
+		expect(states('.mode-btn')).toEqual(['false', 'true', 'false']);
+		picker.switchCalendarType('BS');
+		fixture.detectChanges();
+		expect(states('.calendar-type-btn')).toEqual(['true', 'false']);
+		fixture.destroy();
+	});
 	it('applies month bounds in the BS calendar too', () => {
 		const { fixture, picker } = create({
 			calendar: 'BS',

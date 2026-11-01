@@ -14,7 +14,7 @@ export const projectPages: readonly DocPage[] = [
 			},
 			{
 				title: 'Code editing boundary',
-				body: 'Live JSON and property controls change real picker behavior. TypeScript/HTML tabs show generated source; they do not pretend to compile arbitrary Angular source in the browser. The unreleased package cannot be installed by a remote IDE from npm yet. Use the repository Angular development server for arbitrary component/template/style editing.',
+				body: 'Live JSON and property controls change real picker behavior. TypeScript/HTML tabs show generated source; they do not pretend to compile arbitrary Angular source in the browser. A source release can be installed from npm only after its publication. Use the repository Angular development server for arbitrary component/template/style editing.',
 			},
 			{
 				title: 'Embedding and fallback',
@@ -32,12 +32,11 @@ export const projectPages: readonly DocPage[] = [
 		sections: [
 			{
 				title: 'Workspace versus npm',
-				body: 'The workspace version is 2.0.0-next.0 and is unreleased. The npm registry snapshot confirms latest published 1.1.4. This site documents the workspace implementation; installation and migration pages explain the API difference. Snapshot dates are displayed so cached registry metadata is not mistaken for a real-time statistic.',
+				body: 'The source release version is 2.0.0. The current published version is shown in the npm latest badge and refreshed automatically. This site documents the workspace implementation; installation and migration pages explain the API difference. Snapshot dates are displayed so cached registry metadata is not mistaken for a real-time statistic.',
 			},
 			{
-				title: 'Repository links need correction',
-				body: 'The repository and issue URLs in the package manifest currently return HTTP 404. No Git remote or release tags are configured in this checkout. Source file paths are provided as repository-relative locations, but source, PR, discussion, security and contribution links cannot be fabricated. Confirm the public repository before official deployment.',
-				warning: true,
+				title: 'Project links',
+				body: 'Package metadata links to the project GitHub repository, issue tracker and documentation. Use the navigation links to browse source, report issues or open the interactive playground.',
 			},
 			{
 				title: 'License and dependencies',
@@ -49,12 +48,12 @@ export const projectPages: readonly DocPage[] = [
 		id: 'changelog',
 		title: 'Changelog & release history',
 		group: 'Changelog',
-		description: 'Verified release timestamps and actual unreleased changes, with filtering and search.',
+		description: 'Verified release timestamps and source release notes, with filtering and search.',
 		keywords: 'changelog releases versions added changed fixed removed deprecated security breaking',
 		sections: [
 			{
 				title: 'What is verified',
-				body: 'Published version numbers and timestamps come from a dated npm registry snapshot. Unreleased changes come from the repository CHANGELOG.md. This checkout has no tags and the metadata repository/release endpoints are unavailable. Historical per-version change notes are explicitly marked missing; timestamps are not invented release notes.',
+				body: 'Published versions are checked against the current npm version list; unpublished versions are excluded. Release metadata refreshes automatically, with a verified build snapshot used when the registry is unavailable. Source release notes come from the repository CHANGELOG.md. Historical per-version change notes are explicitly marked missing; timestamps are not invented release notes.',
 			},
 			{
 				title: 'Release categories',
@@ -73,7 +72,7 @@ export const projectPages: readonly DocPage[] = [
 		sections: [
 			{
 				title: 'Scope and compatibility',
-				body: 'This migration is from the published 1.1.4 lineage to the unreleased 2.0.0-next.0 workspace. It is a major-version change, not a compatible 1.x patch. No aliases preserve the removed configuration keys. Use the local tarball while 2.x is unpublished.',
+				body: 'This migration is from the published 1.1.4 lineage to the 2.0.0 source release. It is a major-version change, not a compatible 1.x patch. No aliases preserve the removed configuration keys. Use the local tarball while 2.x is unpublished.',
 			},
 			{
 				title: 'Configuration after migration',
@@ -124,7 +123,7 @@ const config: DatePickerConfig = {
 			},
 			{
 				title: 'Reports and pull requests',
-				body: 'A report should include Angular/TypeScript/browser versions, calendar/selection mode, a minimal config, expected/actual behavior and date-only values. Do not include private booking/customer data. The current manifest repository/issue links return 404, so a working public issue/PR destination must be confirmed before the official site can advertise one.',
+				body: 'A report should include Angular/TypeScript/browser versions, calendar/selection mode, a minimal config, expected/actual behavior and date-only values. Do not include private booking/customer data. Use the GitHub issue tracker linked in the site navigation to report reproducible problems.',
 				warning: true,
 			},
 			{
@@ -146,13 +145,13 @@ const config: DatePickerConfig = {
 			},
 			{
 				title: 'Refresh commands',
-				body: 'API declarations come from the TypeScript source, defaults from the built public package, and release/link metadata from an explicit registry refresh. Builds do not need live registry access to render documentation.',
+				body: 'API declarations come from the TypeScript source, defaults from the built public package, and release/link metadata from an explicit registry refresh. Production builds refresh registry metadata; browser refreshes keep the published version current afterward.',
 				code: 'npm run docs:api\nnpm run docs:registry\nnpm run docs:data\nnpm run check:docs\nnpm run check:docs-site\nnpm run build:docs',
 				language: 'Shell',
 			},
 			{
 				title: 'Publication checklist',
-				body: 'Update site.config.json with confirmed production URLs and base path, verify repository links, refresh the registry snapshot, review npm advisories, run all checks and inspect prerendered HTML. Publish the actual npm prerelease before advertising its npm install command. Keep missing information explicit.',
+				body: 'Update site.config.json with confirmed production URLs and base path, verify repository links, refresh the registry snapshot, review npm advisories, run all checks and inspect prerendered HTML. Publish the release to npm before advertising its npm install command. Keep missing information explicit.',
 			},
 		],
 	},
@@ -165,7 +164,7 @@ const config: DatePickerConfig = {
 		sections: [
 			{
 				title: 'Reporting destination is not configured',
-				body: 'No published private security contact or SECURITY.md policy existed in the audited repository, and its public GitHub URL currently returns 404. Do not post sensitive vulnerability details into a public example or issue. The maintainer must supply a verified private reporting channel before official launch.',
+				body: 'No published private security contact or SECURITY.md policy existed in the audited repository. Do not post sensitive vulnerability details into a public example or issue. The maintainer must supply a verified private reporting channel before official launch.',
 				warning: true,
 			},
 			{

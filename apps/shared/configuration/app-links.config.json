@@ -1,4 +1,4 @@
 {
-    "playground": "http://localhost:4200",
-    "documentation": "http://localhost:4201"
+    "playground": "https://ngx-nepali-dualpicker-playground.vercel.app",
+    "documentation": "https://ngx-nepali-dualpicker-docs.vercel.app"
 }

@@ -37,6 +37,26 @@ export class NotFoundComponent {
 		const document = inject(DOCUMENT);
 		document.querySelector('link[rel="canonical"]')?.remove();
 		document.getElementById('docs-schema')?.remove();
+		document.getElementById('docs-breadcrumbs')?.remove();
+		const meta = inject(Meta);
+		for (const property of [
+			'og:url',
+			'og:image',
+			'og:image:width',
+			'og:image:height',
+			'og:image:type',
+			'og:image:alt',
+		])
+			meta.removeTag('property="' + property + '"');
+		for (const name of ['twitter:image', 'twitter:image:alt']) meta.removeTag('name="' + name + '"');
+		const title = 'Page not found | Nepali Dualpicker';
+		const description =
+			'This documentation page could not be found. Browse the Angular Nepali date picker guides or search the documentation.';
+		meta.updateTag({ name: 'description', content: description });
+		meta.updateTag({ property: 'og:title', content: title });
+		meta.updateTag({ property: 'og:description', content: description });
+		meta.updateTag({ name: 'twitter:title', content: title });
+		meta.updateTag({ name: 'twitter:description', content: description });
 		inject(Title).setTitle('Page not found | Nepali Dualpicker');
 		inject(Meta).updateTag({ name: 'robots', content: 'noindex,nofollow' });
 	}

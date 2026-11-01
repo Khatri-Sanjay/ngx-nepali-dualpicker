@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ngx-nepali-dualpicker-playground.vercel.app/sitemap.xml

@@ -48,23 +48,26 @@ export class ThemeMerger {
 	 * Validate if theme is complete
 	 */
 	static isValid(theme: unknown): theme is DatePickerTheme {
-		return !!(
-			theme !== null &&
-			typeof theme === 'object' &&
-			'colors' in theme &&
-			theme.colors &&
-			'spacing' in theme &&
-			theme.spacing &&
-			'typography' in theme &&
-			theme.typography &&
-			'borderRadius' in theme &&
-			theme.borderRadius &&
-			'shadows' in theme &&
-			theme.shadows &&
-			'transitions' in theme &&
-			theme.transitions &&
-			'dimensions' in theme &&
-			theme.dimensions
+		const record = (value: unknown): value is Record<string, unknown> =>
+			value !== null && typeof value === 'object' && !Array.isArray(value);
+		const strings = (value: unknown, keys: string[]): boolean =>
+			record(value) && keys.every((key) => typeof value[key] === 'string');
+		if (!record(theme) || !record(theme['colors']) || !record(theme['typography'])) return false;
+		const typography = theme['typography'];
+		const weights = typography['fontWeight'];
+		return (
+			Object.values(theme['colors']).every((value) => value === undefined || typeof value === 'string') &&
+			strings(theme['spacing'], ['containerPadding', 'dateGap', 'headerPadding', 'pickerGap']) &&
+			typeof typography['fontFamily'] === 'string' &&
+			strings(typography['fontSize'], ['base', 'small', 'large']) &&
+			record(weights) &&
+			['normal', 'medium', 'semibold', 'bold'].every(
+				(key) => typeof weights[key] === 'number' && Number.isFinite(weights[key]),
+			) &&
+			strings(theme['borderRadius'], ['small', 'medium', 'large', 'full']) &&
+			strings(theme['shadows'], ['dropdown', 'selected']) &&
+			strings(theme['transitions'], ['default', 'fast', 'slow']) &&
+			strings(theme['dimensions'], ['dateSize', 'containerWidth', 'containerMaxHeight', 'iconSize'])
 		);
 	}
 }

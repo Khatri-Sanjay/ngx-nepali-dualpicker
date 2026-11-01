@@ -211,7 +211,7 @@ export class NgxNepaliDualpicker implements ControlValueAccessor, Validator, OnI
 	validate(control: AbstractControl): ValidationErrors | null {
 		const config = this.mergedConfig();
 		if (!config.validation.enabled) {
-			this.validationErrors.set(null);
+			untracked(() => this.validationErrors.set(null));
 			return null;
 		}
 		const errors = this.inputError()
@@ -221,7 +221,9 @@ export class NgxNepaliDualpicker implements ControlValueAccessor, Validator, OnI
 					calendar: this.currentCalendarType(),
 					selectionMode: this.modeState(),
 				});
-		this.validationErrors.set(errors);
+		// Signal Forms invokes legacy validators from a computed. Keep UI feedback writes
+		// outside that reactive context while retaining tracked configuration/error reads.
+		untracked(() => this.validationErrors.set(errors));
 		return errors;
 	}
 	registerOnValidatorChange(fn: () => void): void {
@@ -1080,7 +1082,7 @@ export class NgxNepaliDualpicker implements ControlValueAccessor, Validator, OnI
 	}
 
 	toggleMode(selectionMode: 'single' | 'range' | 'multiple'): void {
-		if (this.isDisabled() || this.mergedConfig().readOnly) return;
+		if (this.isDisabled() || this.mergedConfig().readOnly || this.modeState() === selectionMode) return;
 		this.modeState.set(selectionMode);
 
 		this.clearSelectionState();

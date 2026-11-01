@@ -10,19 +10,19 @@ export const setupPages: readonly DocPage[] = [
 		sections: [
 			{
 				title: 'Choose the correct version',
-				body: 'This documentation describes 2.0.0-next.0 in the repository. npm currently publishes 1.1.4; the renamed 2.x configuration keys do not work in 1.x. Until the prerelease is published, build the package from this workspace and install its tarball. The published-version installation commands below are for 1.1.4 only.',
+				body: 'This documentation describes 2.0.0 in the repository. Published 1.x releases have a different API; the renamed 2.x configuration keys do not work in 1.x. Until version 2.0.0 is published, build the package from this workspace and install its tarball. The published-version installation commands below are for 1.1.4 only.',
 				warning: true,
 			},
 			{
 				title: 'Build the documented package',
 				body: 'Run these commands from the library workspace. The pack script includes migration and changelog documents in dist/packages. Install that tarball in your consuming app, adjusting the relative path to match your folders.',
-				code: 'npm ci\nnpm run pack:lib\n# From your consuming Angular application:\nnpm install ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0-next.0.tgz',
+				code: 'npm ci\nnpm run pack:lib\n# From your consuming Angular application:\nnpm install ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0.tgz',
 				language: 'Shell',
 			},
 			{
 				title: 'Package manager alternatives',
 				body: 'All three package managers can install the generated tarball. Use the same package-manager lockfile as the consuming application.',
-				code: 'yarn add ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0-next.0.tgz\npnpm add ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0-next.0.tgz',
+				code: 'yarn add ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0.tgz\npnpm add ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0.tgz',
 				language: 'Shell',
 			},
 			{

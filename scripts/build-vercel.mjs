@@ -20,9 +20,15 @@ const playground = origin('NDP_PLAYGROUND_URL');
 const sitePath = 'apps/documentation/site.config.json';
 const linksPath = 'apps/shared/configuration/app-links.config.json';
 const originals = new Map(
-	[sitePath, linksPath, 'apps/documentation/src/assets/robots.txt', 'apps/documentation/src/assets/sitemap.xml'].map(
-		(file) => [file, readFileSync(file)],
-	),
+	[
+		sitePath,
+		linksPath,
+		'apps/documentation/src/assets/robots.txt',
+		'apps/documentation/src/assets/sitemap.xml',
+		'apps/playground/src/index.html',
+		'apps/playground/src/assets/robots.txt',
+		'apps/playground/src/assets/sitemap.xml',
+	].map((file) => [file, readFileSync(file)]),
 );
 const output = path.resolve('.vercel/output');
 // Only remove this build's fixed output folder; retain .vercel/project.json and credentials.
@@ -62,12 +68,12 @@ try {
 		routes.push({ src: '^/404(?:/|\\.html)?$', dest: '/404.html', status: 404 });
 		routes.push({ handle: 'filesystem' }, { src: '/(.*)', dest: '/404.html', status: 404 });
 	} else {
-		// Missing assets must not receive HTML. Extensionless Angular routes use the SPA entry point.
-		writeFileSync(path.join(output, 'static', 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+		// The legacy playground path redirects to the canonical root.
+		routes.push({ src: '^/playground/?$', headers: { Location: '/' }, status: 308 });
 		routes.push({ handle: 'filesystem' }, { src: '^/[^.]*$', dest: '/index.html' });
 	}
 	writeFileSync(path.join(output, 'config.json'), JSON.stringify({ version: 3, routes }, null, 2) + '\n');
-	console.log(`Vercel ${app} ${production ? 'production' : 'preview'} output: ${output}`);
+	console.log('Vercel output: ' + output);
 } finally {
 	for (const [file, contents] of originals) writeFileSync(file, contents);
 }

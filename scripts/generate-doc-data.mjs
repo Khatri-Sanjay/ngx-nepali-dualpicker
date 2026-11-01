@@ -155,6 +155,7 @@ for (const token of themeTokens)
 		category: 'Theme token',
 		text: token.type + ' ' + token.defaultValue,
 	});
+const releaseVersion = JSON.parse(readFileSync('libs/ngx-nepali-dualpicker/package.json', 'utf8')).version;
 const changelog = readFileSync('CHANGELOG.md', 'utf8');
 const notes = changelog
 	.split(/\r?\n/)
@@ -177,10 +178,10 @@ const notes = changelog
 const migration = readFileSync('docs/MIGRATION.md', 'utf8');
 for (const [i, note] of notes.entries())
 	index.push({
-		id: 'unreleased-' + i,
-		title: note.category + ' in the next release',
-		path: '/changelog#release-next',
-		category: 'Unreleased changelog',
+		id: 'current-release-' + i,
+		title: note.category + ' in ' + releaseVersion,
+		path: '/changelog#release-' + releaseVersion.replaceAll('.', '-'),
+		category: 'Release notes',
 		text: note.text,
 	});
 writeFileSync(

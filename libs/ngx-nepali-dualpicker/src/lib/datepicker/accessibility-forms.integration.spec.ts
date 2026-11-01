@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormControl, ReactiveFormsModule, FormsModule, NgModel } from '@angular/forms';
@@ -35,6 +35,18 @@ class ModelHost {
 }
 
 describe('Accessible forms and readonly integration', () => {
+	it('can validate within a computed without writing into its reactive context', () => {
+		const { fixture, picker } = create();
+		const value = signal('2024-02-30');
+		const result = computed(() => picker.validate(new FormControl(value())));
+		expect(result()?.['nepaliDate']).toBeDefined();
+		value.set('2024-02-29');
+		expect(result()).toBeNull();
+		fixture.componentInstance.config = { calendar: 'AD', validation: { enabled: false } };
+		fixture.detectChanges();
+		value.set('invalid');
+		expect(result()).toBeNull();
+	});
 	it('applies opt-in draft validation to template-driven forms too', async () => {
 		const fixture = TestBed.createComponent(ModelHost);
 		fixture.detectChanges();

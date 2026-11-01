@@ -81,11 +81,18 @@ describe('Documentation platform', () => {
 			expect(TestBed.inject(Meta).getTag('property="og:url"')?.content).toBe(
 				'https://docs.example.invalid/configuration',
 			);
+			expect(TestBed.inject(Meta).getTag('property="og:image"')?.content).toBe(
+				'https://docs.example.invalid/assets/brand/social-card.png',
+			);
+			expect(TestBed.inject(Meta).getTag('name="twitter:card"')?.content).toBe('summary_large_image');
 			expect(JSON.parse(document.getElementById('docs-schema')?.textContent ?? '{}')['@type']).toBe(
 				'TechArticle',
 			);
 			await harness.navigateByUrl('/unknown-page');
 			expect(document.querySelector('link[rel="canonical"]')).toBeNull();
+			expect(TestBed.inject(Meta).getTag('property="og:url"')).toBeNull();
+			expect(TestBed.inject(Meta).getTag('property="og:image"')).toBeNull();
+			expect(document.getElementById('docs-breadcrumbs')).toBeNull();
 		} finally {
 			site.publicUrl = previous;
 		}
@@ -95,7 +102,7 @@ describe('Documentation platform', () => {
 			'rangeConstraints',
 			'getDaysInBsMonth',
 			'--ndp-color-selected-background',
-			'Version 1.1.4',
+			'Version ' + site.registry.latest,
 			'NgxNepaliDualpicker',
 		])
 			expect(searchIndex.some((item) => (item.title + ' ' + item.text).includes(term)))
@@ -127,7 +134,7 @@ describe('Documentation platform', () => {
 		for (const page of pages) {
 			await harness.navigateByUrl(pagePath(page.id));
 			harness.detectChanges();
-			expect(TestBed.inject(Title).getTitle()).toBe(page.title + ' | ngx-nepali-dualpicker');
+			expect(TestBed.inject(Title).getTitle()).toBe((page.seoTitle ?? page.title) + ' | ngx-nepali-dualpicker');
 			expect(TestBed.inject(Meta).getTag('name="description"')?.content).toBe(page.description);
 			for (const section of navigation.find((item) => item.id === page.id)?.sections ?? [])
 				expect(harness.routeNativeElement?.querySelector('[id="' + section.id + '"]'))
@@ -184,12 +191,16 @@ describe('Documentation platform', () => {
 		const fixture = TestBed.createComponent(ReleaseHistoryComponent);
 		fixture.detectChanges();
 		const component = fixture.componentInstance;
-		expect(fixture.nativeElement.textContent).toContain('Unreleased workspace');
-		component.version.set('1.1.4');
+		expect(fixture.nativeElement.textContent).toContain(site.metadata.version);
+		component.version.set(component.registry.latest);
 		fixture.detectChanges();
 		expect(component.releases().length).toBe(1);
-		expect(component.showNext()).toBeFalse();
-		expect(fixture.nativeElement.querySelector('time').textContent).toBe('2026-10-05');
+		expect(component.showCurrent()).toBeFalse();
+		expect(fixture.nativeElement.querySelector('time').textContent).toBe(
+			component.registry.releases
+				.find((release) => release.version === component.registry.latest)!
+				.date.slice(0, 10),
+		);
 		expect(fixture.nativeElement.textContent).toContain('not available');
 		component.query.set('no-release');
 		fixture.detectChanges();

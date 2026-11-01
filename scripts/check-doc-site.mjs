@@ -68,13 +68,19 @@ if (existsSync(output + '/index.html')) {
 		const html = readFileSync(filename, 'utf8');
 		assert((html.match(/<h1(?:\s|>)/g) ?? []).length === 1, 'Expected exactly one prerendered h1: ' + page.id);
 		assert(
-			html.includes(page.title.replaceAll('&', '&amp;') + ' | ngx-nepali-dualpicker'),
+			html.includes((page.seoTitle ?? page.title).replaceAll('&', '&amp;') + ' | ngx-nepali-dualpicker'),
 			'Missing page title: ' + page.id,
 		);
 		assert(/name="description" content="[^"]+"/.test(html), 'Missing description: ' + page.id);
 		assert(html.includes('og:title') && html.includes('twitter:card'), 'Missing social metadata: ' + page.id);
-		if (site.publicUrl) assert(html.includes('rel="canonical"'), 'Missing canonical: ' + page.id);
-		else
+		if (site.publicUrl) {
+			assert(html.includes('rel="canonical"'), 'Missing canonical: ' + page.id);
+			assert(
+				html.includes(site.publicUrl.replace(/\/$/, '') + '/assets/brand/social-card.png'),
+				'Missing social image: ' + page.id,
+			);
+			assert(html.includes('summary_large_image'), 'Missing large social card: ' + page.id);
+		} else
 			assert(
 				html.includes('noindex,nofollow') && !html.includes('rel="canonical"'),
 				'Unconfigured build must not invent a canonical: ' + page.id,
@@ -87,6 +93,14 @@ if (existsSync(output + '/index.html')) {
 			assert(paths.has(href) || href === '/', 'Broken rendered internal link ' + page.id + ': ' + href);
 		}
 	}
+	for (const file of ['logo.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'social-card.png'])
+		assert(existsSync(output + '/assets/brand/' + file), 'Missing brand asset: ' + file);
+	const card = readFileSync(output + '/assets/brand/social-card.png');
+	assert(card.readUInt32BE(16) === 1200 && card.readUInt32BE(20) === 630, 'Social card must be 1200x630');
+	const manifest = JSON.parse(readFileSync(output + '/assets/site.webmanifest', 'utf8'));
+	for (const icon of manifest.icons)
+		assert(existsSync(output + '/assets/' + icon.src), 'Missing manifest icon: ' + icon.src);
+	assert(readFileSync(output + '/favicon.ico').readUInt16LE(4) === 3, 'Favicon must contain three sizes');
 	assert(existsSync(output + '/robots.txt') && existsSync(output + '/sitemap.xml'), 'Root robots/sitemap missing');
 }
 if (failures.length) {

@@ -1,6 +1,11 @@
 # Changelog
 
-## 2.0.0-next.0 — unreleased
+## 2.0.0 - 2026-11-01
+
+- Add verified Signal Forms interoperability for Angular 21 and 22, document Angular 21 validator-forwarding limits, and fix validation inside a computed context.
+- Refresh published npm versions automatically in documentation and playground; exclude unpublished versions from release history.
+- Add a shared dual-calendar logo, multi-size favicons, web manifests, social sharing images, and expanded documentation metadata.
+- Preserve selected dates when clicking the active selection mode and expose active calendar/mode states to assistive technology.
 
 - Import the library and demo into this workspace.
 - Fix popup placement with collision-aware side fallback, theme-sized width, bounded scrolling, visual-viewport tracking and measurement before keyboard focus; preserve full-width mobile bottom sheets.

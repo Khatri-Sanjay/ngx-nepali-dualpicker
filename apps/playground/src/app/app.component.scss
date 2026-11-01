@@ -53,6 +53,9 @@ button:focus-visible {
 	border-bottom: 1px solid var(--doc-border);
 }
 .brand {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 	font-size: 18px;
 	font-weight: 750;
 	color: var(--doc-text);

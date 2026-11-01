@@ -67,9 +67,33 @@
                         "polyfills": ["zone.js"],
                         "tsConfig": "apps/playground/tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
-                        "assets": ["apps/playground/src/favicon.ico", "apps/playground/src/assets"],
+                        "assets": [
+                            "apps/playground/src/favicon.ico",
+                            "apps/playground/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "apps/shared/assets",
+                                "output": "assets"
+                            },
+                            {
+                                "glob": "robots.txt",
+                                "input": "apps/playground/src/assets",
+                                "output": "/"
+                            },
+                            {
+                                "glob": "sitemap.xml",
+                                "input": "apps/playground/src/assets",
+                                "output": "/"
+                            }
+                        ],
                         "styles": ["apps/playground/src/styles.scss"],
-                        "scripts": []
+                        "scripts": [],
+                        "server": "apps/playground/src/main.server.ts",
+                        "prerender": {
+                            "routesFile": "apps/playground/prerender-routes.txt",
+                            "discoverRoutes": false
+                        },
+                        "ssr": false
                     },
                     "configurations": {
                         "production": {
@@ -90,7 +114,8 @@
                         "development": {
                             "optimization": false,
                             "extractLicenses": false,
-                            "sourceMap": true
+                            "sourceMap": true,
+                            "prerender": false
                         }
                     },
                     "defaultConfiguration": "production"
@@ -119,7 +144,15 @@
                         "polyfills": ["zone.js", "zone.js/testing"],
                         "tsConfig": "apps/playground/tsconfig.spec.json",
                         "inlineStyleLanguage": "scss",
-                        "assets": ["apps/playground/src/favicon.ico", "apps/playground/src/assets"],
+                        "assets": [
+                            "apps/playground/src/favicon.ico",
+                            "apps/playground/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "apps/shared/assets",
+                                "output": "assets"
+                            }
+                        ],
                         "styles": ["apps/playground/src/styles.scss"],
                         "scripts": []
                     }
@@ -159,6 +192,11 @@
                                 "glob": "sitemap.xml",
                                 "input": "apps/documentation/src/assets",
                                 "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "apps/shared/assets",
+                                "output": "assets"
                             }
                         ],
                         "styles": ["apps/documentation/src/styles.scss"],
@@ -222,7 +260,15 @@
                         "polyfills": ["zone.js", "zone.js/testing"],
                         "tsConfig": "apps/documentation/tsconfig.spec.json",
                         "inlineStyleLanguage": "scss",
-                        "assets": ["apps/documentation/src/favicon.ico", "apps/documentation/src/assets"],
+                        "assets": [
+                            "apps/documentation/src/favicon.ico",
+                            "apps/documentation/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "apps/shared/assets",
+                                "output": "assets"
+                            }
+                        ],
                         "styles": ["apps/documentation/src/styles.scss"],
                         "scripts": []
                     }

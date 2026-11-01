@@ -1,5 +1,6 @@
+import { PublishedPackageService } from '../../../shared/content/published-package.service';
 import { appLinks } from '../../../shared/configuration/app-links';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { packageMetadata } from '../../../shared/content/package-metadata';
 @Component({
@@ -11,6 +12,7 @@ import { packageMetadata } from '../../../shared/content/package-metadata';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+	readonly published = inject(PublishedPackageService);
 	readonly metadata = packageMetadata;
 	readonly appLinks = appLinks;
 	readonly dark = signal(false);

@@ -77,21 +77,10 @@ button:focus-visible {
 	margin-top: 5px;
 }
 .brand-mark {
-	display: grid;
-	place-content: center;
-	position: relative;
-	background: var(--doc-accent);
-	color: var(--doc-bg);
-	font-size: 25px;
-	border-radius: 10px;
+	display: block;
 	width: 38px;
 	height: 38px;
-}
-.brand-mark span {
-	font-size: 11px;
-	position: absolute;
-	right: 5px;
-	top: 3px;
+	flex-shrink: 0;
 }
 .site-header app-doc-search {
 	flex: 1;
@@ -292,9 +281,8 @@ main {
 		gap: 8px;
 	}
 	.brand-mark {
-		width: 30px;
+		width: 32px;
 		height: 32px;
-		font-size: 22px;
 	}
 	.header-actions > a {
 		display: none;

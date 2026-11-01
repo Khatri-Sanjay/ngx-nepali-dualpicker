@@ -1,3 +1,4 @@
+import { PublishedPackageService } from '../../../shared/content/published-package.service';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
@@ -29,6 +30,7 @@ import { DocSearchComponent } from './components/doc-search/doc-search.component
 })
 export class AppComponent {
 	readonly site = site;
+	readonly published = inject(PublishedPackageService);
 	readonly metadata = site.metadata;
 	readonly navigation = navigation;
 	readonly groups = docGroups;

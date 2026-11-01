@@ -1,0 +1,36 @@
+{
+    "latest": "1.1.4",
+    "releases": [
+        {
+            "version": "1.1.4",
+            "date": "2026-10-05T21:49:20.355Z",
+            "notesAvailable": false
+        },
+        {
+            "version": "1.1.3",
+            "date": "2026-06-01T15:36:10.969Z",
+            "notesAvailable": false
+        },
+        {
+            "version": "1.1.1",
+            "date": "2026-04-07T08:03:40.126Z",
+            "notesAvailable": false
+        },
+        {
+            "version": "1.1.0",
+            "date": "2026-02-17T06:02:08.949Z",
+            "notesAvailable": false
+        },
+        {
+            "version": "1.0.1",
+            "date": "2026-02-12T12:00:10.762Z",
+            "notesAvailable": false
+        },
+        {
+            "version": "1.0.0",
+            "date": "2026-02-12T06:05:15.113Z",
+            "notesAvailable": false
+        }
+    ],
+    "checkedAt": "2026-11-01T19:43:33.461Z"
+}

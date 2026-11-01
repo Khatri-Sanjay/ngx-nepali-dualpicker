@@ -3,7 +3,7 @@ export const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		title: 'Nepali Date Playground',
+		title: 'Angular Nepali Date Picker Playground | ngx-nepali-dualpicker',
 		loadComponent: () =>
 			import('./pages/playground/playground.component').then((module) => module.PlaygroundComponent),
 	},

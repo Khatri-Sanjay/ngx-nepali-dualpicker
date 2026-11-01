@@ -1,9 +1,20 @@
 <div class="site" [class.dark]="dark()">
 	<a class="skip-link" href="#main-content">Skip to content</a>
 	<header class="site-header">
-		<a class="brand" href="/">Nepali Date Playground</a>
+		<a class="brand" href="/"
+			><img src="assets/brand/logo.svg" width="38" height="38" alt="" /><span>Nepali Date Playground</span></a
+		>
 		<nav class="header-actions" aria-label="Project links">
-			<span class="version">v{{ metadata.version }}</span> <a [href]="appLinks.documentation">Documentation ?</a
+			<span
+				class="version"
+				[title]="
+					published.stale()
+						? 'Last known npm version; registry refresh unavailable'
+						: 'Latest published npm version'
+				"
+				>npm v{{ published.latest() }}</span
+			>
+			<a [href]="appLinks.documentation">Documentation ?</a
 			><a [href]="metadata.repository" target="_blank" rel="noopener noreferrer">GitHub ?</a>
 			<button type="button" (click)="toggleDark()" [attr.aria-pressed]="dark()">
 				{{ dark() ? 'Light' : 'Dark' }}

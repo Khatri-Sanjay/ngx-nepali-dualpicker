@@ -4,7 +4,8 @@ export const navigation = [
 		id: 'home',
 		path: '/introduction',
 		title: 'Introduction',
-		description: 'Nepali dates, naturally integrated with Angular.',
+		description:
+			'Angular Nepali date picker with BS and AD calendar conversion, single dates, date ranges, multiple selection, forms, themes and live examples.',
 		group: 'Introduction',
 		sections: [
 			{
@@ -29,8 +30,8 @@ export const navigation = [
 				title: 'Workspace versus npm',
 			},
 			{
-				id: 'repository-links-need-correction',
-				title: 'Repository links need correction',
+				id: 'project-links',
+				title: 'Project links',
 			},
 			{
 				id: 'license-and-dependencies',
@@ -1029,7 +1030,7 @@ export const navigation = [
 		id: 'changelog',
 		path: '/changelog',
 		title: 'Changelog & release history',
-		description: 'Verified release timestamps and actual unreleased changes, with filtering and search.',
+		description: 'Verified release timestamps and source release notes, with filtering and search.',
 		group: 'Changelog',
 		sections: [
 			{

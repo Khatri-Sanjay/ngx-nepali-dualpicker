@@ -48,4 +48,4 @@ Four new configuration/interaction tests were observed failing before their fixe
 8. Execute the packed Angular 17–22 matrix with compatible Node/TypeScript versions; run browser accessibility tests and bundle analysis.
 9. Review public contracts and all release metadata, inspect the final tarball, and explicitly authorize any publish or remote release.
 
-Version is `2.0.0-next.0` because removals and normalization/read changes are breaking. This checkpoint is runnable but is not the completed, verified stable toolkit. No npm publish, remote push or public release was performed.
+Version is `2.0.0` because removals and normalization/read changes are breaking. This checkpoint is runnable but is not the completed, verified stable toolkit. No npm publish, remote push or public release was performed.

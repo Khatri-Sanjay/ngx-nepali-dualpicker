@@ -2,8 +2,9 @@
 	<a class="skip-link" href="#main-content">Skip to content</a>
 	<header class="site-header" [inert]="menuOpen()">
 		<a class="brand" routerLink="/introduction" aria-label="Nepali Dualpicker documentation home"
-			><span class="brand-mark" aria-hidden="true">N<span>2</span></span
-			><span>Nepali Dualpicker<small>ANGULAR CALENDAR TOOLKIT</small></span></a
+			><img class="brand-mark" src="assets/brand/logo.svg" width="38" height="38" alt="" /><span
+				>Nepali Dualpicker<small>ANGULAR CALENDAR TOOLKIT</small></span
+			></a
 		>
 		<app-doc-search [disabled]="menuOpen()" />
 		<nav class="header-actions" aria-label="Project links">
@@ -41,9 +42,9 @@
 		</nav>
 	</header>
 	<div class="version-notice" [inert]="menuOpen()">
-		<span class="version-tag">NEXT {{ metadata.version }}</span
+		<span class="version-tag">npm v{{ published.latest() }}</span
 		><span
-			>Unreleased workspace documentation. Published npm latest: <strong>{{ site.registry.latest }}</strong
+			>Built library: {{ metadata.version }}. Latest on npm: <strong>{{ published.latest() }}</strong
 			>.</span
 		><a routerLink="/installation">Installation options <span aria-hidden="true">&rarr;</span></a>
 	</div>
@@ -69,7 +70,7 @@
 				<strong>Documentation</strong><button type="button" (click)="closeMenu()">Close</button>
 			</div>
 			<div class="sidebar-version">
-				<span class="status-dot" aria-hidden="true"></span> {{ metadata.version }} <span>Next</span>
+				<span class="status-dot" aria-hidden="true"></span> {{ published.latest() }} <span>npm latest</span>
 			</div>
 			<nav aria-label="Documentation pages">
 				@for (group of groups; track group) {

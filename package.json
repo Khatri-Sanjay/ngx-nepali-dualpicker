@@ -39,11 +39,14 @@
         "check:calendar": "node scripts/check-calendar.mjs",
         "docs:data": "node scripts/generate-doc-data.mjs",
         "docs:registry": "node scripts/refresh-doc-registry.mjs && npm run docs:data",
-        "prebuild:docs": "npm run docs:api && npm run docs:data",
+        "prebuild:docs": "npm run docs:api && npm run docs:registry",
         "check:docs-site": "node scripts/check-doc-site.mjs",
         "check:docs-browser": "node scripts/check-doc-browser.mjs",
         "build:vercel": "node scripts/build-vercel.mjs",
-        "check:vercel": "node scripts/check-vercel-output.mjs"
+        "check:vercel": "node scripts/check-vercel-output.mjs",
+        "prebuild:playground": "node scripts/refresh-doc-registry.mjs && node scripts/generate-playground-seo.mjs",
+        "brand:assets": "node scripts/generate-brand-assets.mjs",
+        "check:seo": "node scripts/check-site-seo.mjs"
     },
     "private": true,
     "dependencies": {

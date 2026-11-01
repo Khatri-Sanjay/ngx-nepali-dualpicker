@@ -1,40 +1,47 @@
 <p class="snapshot">
-	npm metadata checked {{ registry.checkedAt }}. Publication dates come from the registry; workspace notes come from
-	CHANGELOG.md.
+	npm metadata checked {{ registry.checkedAt.slice(0, 10) }}. Publication dates come from the registry; workspace
+	notes come from CHANGELOG.md.
 </p>
+@if (published.stale()) {
+	<p role="status">Registry refresh unavailable. Showing the last verified release list.</p>
+}
 <div class="release-filters">
 	<label
 		>Search releases<input
 			#queryInput
 			type="search"
-			placeholder="Version or unreleased change..."
+			placeholder="Version or release change..."
 			(input)="this.query.set(queryInput.value)" /></label
 	><label
 		>Version<select #versionInput (change)="this.version.set(versionInput.value)">
 			<option value="all">All versions</option>
-			<option value="next">Unreleased workspace</option>
-			@for (release of registry.releases; track release.version) {
+			<option [value]="site.metadata.version">{{ site.metadata.version }} release</option>
+			@for (release of previousReleases(); track release.version) {
 				<option [value]="release.version">{{ release.version }}</option>
 			}
 		</select></label
 	>
 </div>
 <nav class="release-nav" aria-label="Release navigation">
-	@if (showNext()) {
-		<a href="#release-next">Next</a>
+	@if (showCurrent()) {
+		<a [href]="'#' + releaseId(site.metadata.version)">{{ site.metadata.version }}</a>
 	}
 	@for (release of releases(); track release.version) {
 		<a [href]="'#' + releaseId(release.version)">{{ release.version }}</a>
 	}
 </nav>
-@if (showNext()) {
-	<article class="release" id="release-next">
+@if (showCurrent()) {
+	<article class="release" [id]="releaseId(site.metadata.version)">
 		<header>
 			<h3>{{ site.metadata.version }}</h3>
-			<span class="badge">Unreleased workspace</span>
+			<span class="badge">{{ currentPublished() ? 'Published release' : 'Release prepared' }}</span>
+			@if (currentPublished(); as release) {
+				<time [attr.datetime]="release.date">{{ release.date.slice(0, 10) }}</time>
+			}
 		</header>
 		<p>
-			No release date is recorded. Changes below come from CHANGELOG.md; they are not published npm release notes.
+			Release notes come from CHANGELOG.md. npm publication status and timestamps are checked against the
+			registry.
 		</p>
 		<a routerLink="/migration">Read the breaking-change migration guide</a>
 		@for (category of categories; track category) {
@@ -72,6 +79,6 @@
 		>
 	</article>
 }
-@if (!showNext() && !releases().length) {
+@if (!showCurrent() && !releases().length) {
 	<p class="empty" role="status">No matching releases. Clear the search or choose another version.</p>
 }

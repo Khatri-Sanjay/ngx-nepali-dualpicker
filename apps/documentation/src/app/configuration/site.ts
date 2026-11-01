@@ -6,8 +6,8 @@ export const site = {
 	...config,
 	publicUrl: config.publicUrl as string | null,
 	playground: config.playgroundUrl || (!config.publicUrl ? appLinks.playground : null),
-	repository: registrySnapshot.repositoryAvailable ? packageMetadata.repository : null,
-	issues: registrySnapshot.repositoryAvailable ? packageMetadata.issues : null,
+	repository: packageMetadata.repository,
+	issues: packageMetadata.issues,
 	registry: registrySnapshot,
 	metadata: packageMetadata,
 };

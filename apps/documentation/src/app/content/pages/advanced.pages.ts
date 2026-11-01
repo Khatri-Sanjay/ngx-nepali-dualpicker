@@ -215,7 +215,7 @@ export class DynamicExample {
 			},
 			{
 				title: 'Before stable publication',
-				body: 'The repository release checkpoint calls for independent calendar data/provenance review, target browser/assistive-technology verification, consumer-version verification and full SSR/hydration validation. The package metadata currently points to an unavailable public repository and the 2.x prerelease is not published. No dates are promised for these tasks.',
+				body: 'The repository release checkpoint calls for independent calendar data/provenance review, target browser/assistive-technology verification, consumer-version verification and full SSR/hydration validation. The source release must be published before it is available on npm. No dates are promised for these tasks.',
 			},
 		],
 	},

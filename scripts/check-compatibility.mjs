@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { signalHost, signalSpec } from './signal-forms-fixture.mjs';
 
 // Install the actual npm tarball in an isolated consumer. Never map library source.
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -234,6 +235,17 @@ describe('Published package consumer', () => {
 });
 `,
 );
+if (major >= 21) {
+	writeFileSync(path.join(fixture, 'src/signal-host.ts'), signalHost);
+	writeFileSync(
+		path.join(fixture, 'src/signal-forms.spec.ts'),
+		`const forwardsLegacyValidators = ${major >= 22};\n` + signalSpec,
+	);
+	writeFileSync(
+		path.join(fixture, 'src/main.ts'),
+		"import { bootstrapApplication } from '@angular/platform-browser';\nimport { SignalHost } from './signal-host';\nbootstrapApplication(SignalHost).catch(console.error);\n",
+	);
+}
 console.log(`Checking Angular ${angular} with Node ${process.version} and the packed library`);
 run([npmCli, 'install', '--no-audit', '--no-fund']);
 const cli = path.join(fixture, 'node_modules/@angular/cli/bin/ng.js');
@@ -281,6 +293,7 @@ json('verification.json', {
 		'packed install',
 		'production build',
 		'browser forms and core smoke',
+		...(major >= 21 ? ['Signal Forms production build and six browser integration scenarios'] : []),
 		'server rendering without browser globals',
 	],
 });

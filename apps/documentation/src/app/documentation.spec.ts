@@ -40,7 +40,9 @@ describe('Documentation consumer', () => {
 		expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toContain('Nepali dates.');
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
-		expect(fixture.nativeElement.querySelector('a[href="http://localhost:4200"]')).not.toBeNull();
+		expect(
+			fixture.nativeElement.querySelector('a[href="https://ngx-nepali-dualpicker-playground.vercel.app"]'),
+		).not.toBeNull();
 	});
 	it('renders every route and navigates between pages', async () => {
 		const errors = spyOn(console, 'error');
@@ -198,8 +200,8 @@ describe('Documentation consumer', () => {
 		expect(component.menuOpen()).toBeFalse();
 
 		expect(
-			fixture.nativeElement.querySelector('a[href="https://github.com/Khatri-Sanjay/ngx-nepali-pickers"]'),
-		).toBeNull();
+			fixture.nativeElement.querySelector('a[href="https://github.com/Khatri-Sanjay/ngx-nepali-dualpicker"]'),
+		).not.toBeNull();
 	});
 
 	it('copies exact code and announces clipboard failure', async () => {

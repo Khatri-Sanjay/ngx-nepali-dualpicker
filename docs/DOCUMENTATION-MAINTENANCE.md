@@ -38,9 +38,9 @@ npm run check:docs-site
 
 ## Releases and real external links
 
-`npm run docs:registry` explicitly refreshes npm versions/publication timestamps and repository/homepage availability, then regenerates the search index. Normal builds use the committed snapshot and need no external metadata requests. The UI displays the snapshot date and separates the unpublished workspace version from published npm latest. Do not invent missing historical release notes. Keep CHANGELOG.md and docs/MIGRATION.md authoritative for unreleased changes; review generated category assignments before release.
+`npm run docs:registry` refreshes npm versions/publication timestamps and repository/homepage availability, then regenerates the search index. Production builds of both apps refresh npm metadata automatically and fail if a valid latest tag cannot be obtained. Releases come from the current `versions` list, with publication dates from `time`; timestamp entries for unpublished versions are excluded. Both apps use the shared `PublishedPackageService` to refresh npm latest and the release list after browser rendering, every five minutes while visible, and when the tab becomes visible. Polling runs outside Angular stabilization and stops when the service is destroyed. Browser failures retain the last verified build/runtime snapshot and mark it stale. The npm latest label is separate from the library version compiled into the deployed app. Do not invent missing historical release notes. Keep CHANGELOG.md and docs/MIGRATION.md authoritative for unreleased changes; review generated category assignments before release.
 
-The manifest repository currently returns 404. Fix and verify the real repository URL before advertising GitHub/source/issues/PR links. No security contact or discussions URL is inferred. A verified source link can be added after the repository is reachable and its default branch is known.
+Project URLs are maintained in the library package manifest and shared app/site configuration. No security contact or discussions URL is inferred. A verified source link can be added after the repository is reachable and its default branch is known.
 
 ## Production identity and SEO
 

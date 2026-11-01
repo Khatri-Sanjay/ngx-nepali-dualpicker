@@ -132,13 +132,14 @@
 						[disabled]="isDisabled() || mergedConfig().readOnly"
 						class="calendar-type-btn"
 						[ngClass]="{ active: currentCalendarType() === 'BS' }"
+						[attr.aria-pressed]="currentCalendarType() === 'BS'"
 						(click)="switchCalendarType('BS')"
 						type="button"
 						[attr.aria-label]="
 							currentCalendarType() === 'BS'
 								? 'BS'
 								: mergedConfig().language === 'ne'
-									? 'BS ?????? ??????????'
+									? 'BS पात्रोमा बदल्नुहोस्'
 									: 'BS, switch to Bikram Sambat calendar'
 						"
 					>
@@ -164,13 +165,14 @@
 						[disabled]="isDisabled() || mergedConfig().readOnly"
 						class="calendar-type-btn"
 						[ngClass]="{ active: currentCalendarType() === 'AD' }"
+						[attr.aria-pressed]="currentCalendarType() === 'AD'"
 						(click)="switchCalendarType('AD')"
 						type="button"
 						[attr.aria-label]="
 							currentCalendarType() === 'AD'
 								? 'AD'
 								: mergedConfig().language === 'ne'
-									? 'AD ?????? ??????????'
+									? 'AD पात्रोमा बदल्नुहोस्'
 									: 'AD, switch to Gregorian calendar'
 						"
 					>
@@ -223,6 +225,7 @@
 						[disabled]="isDisabled() || mergedConfig().readOnly"
 						class="mode-btn"
 						[ngClass]="{ active: !rangeMode() && !multipleMode() }"
+						[attr.aria-pressed]="!rangeMode() && !multipleMode()"
 						(click)="toggleMode('single')"
 						type="button"
 					>
@@ -248,6 +251,7 @@
 						[disabled]="isDisabled() || mergedConfig().readOnly"
 						class="mode-btn"
 						[ngClass]="{ active: rangeMode() }"
+						[attr.aria-pressed]="rangeMode()"
 						(click)="toggleMode('range')"
 						type="button"
 					>
@@ -274,6 +278,7 @@
 						[disabled]="isDisabled() || mergedConfig().readOnly"
 						class="mode-btn"
 						[ngClass]="{ active: multipleMode() }"
+						[attr.aria-pressed]="multipleMode()"
 						(click)="toggleMode('multiple')"
 						type="button"
 					>

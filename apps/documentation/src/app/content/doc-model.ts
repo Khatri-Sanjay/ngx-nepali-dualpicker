@@ -26,6 +26,7 @@ export interface DocSection {
 export interface DocPage {
 	readonly id: string;
 	readonly title: string;
+	readonly seoTitle?: string;
 	readonly description: string;
 	readonly group: DocGroup | 'Overview' | 'Learn' | 'Reference';
 	readonly keywords: string;

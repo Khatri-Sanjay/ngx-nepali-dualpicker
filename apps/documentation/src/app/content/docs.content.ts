@@ -2,7 +2,7 @@ import type { ApiRow } from '../components/api-table/api-table.component';
 import type { DocPage } from './doc-model';
 
 export const installation =
-	'npm run pack:lib\n# From your consuming Angular app, install the generated local tarball:\nnpm install ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0-next.0.tgz';
+	'npm run pack:lib\n# From your consuming Angular app, install the generated local tarball:\nnpm install ../nepali-dualpicker-workspace/dist/packages/ngx-nepali-dualpicker-2.0.0.tgz';
 export const quickStart = `import { Component } from '@angular/core';
 import { NgxNepaliDualpicker } from 'ngx-nepali-dualpicker';
 import type { DatePickerConfig, DatePickerValue } from 'ngx-nepali-dualpicker';
@@ -105,9 +105,11 @@ const config: DatePickerConfig = {
 	},
 	{
 		id: 'home',
+		seoTitle: 'Angular Nepali Date Picker for BS and AD Calendars',
 		title: 'Introduction',
 		group: 'Overview',
-		description: 'Nepali dates, naturally integrated with Angular.',
+		description:
+			'Angular Nepali date picker with BS and AD calendar conversion, single dates, date ranges, multiple selection, forms, themes and live examples.',
 		keywords: 'Bikram Sambat Gregorian datepicker standalone TypeScript',
 		sections: [
 			{
@@ -130,7 +132,7 @@ const config: DatePickerConfig = {
 		sections: [
 			{
 				title: 'Install',
-				body: 'This site documents the unreleased 2.0.0-next.0 workspace. The npm latest tag is 1.1.4 and uses a different API. Build and install the local tarball below to run these examples; adjust its relative path for your application. Your application supplies Angular common/core/forms and RxJS peers. The development compiler is Angular 17.3; the declared peer range is 17–22. The repository architecture report records the exact packed-consumer builds, browser forms tests and server-rendering smoke checks for selected Angular 17-22 versions.',
+				body: 'This site documents the 2.0.0 source release. Check the live npm latest badge for the current published version. Published 1.x releases use a different API. Build and install the local tarball below to run these examples; adjust its relative path for your application. Your application supplies Angular common/core/forms and RxJS peers. The development compiler is Angular 17.3; the declared peer range is 17–22. The repository architecture report records the exact packed-consumer builds, browser forms tests and server-rendering smoke checks for selected Angular 17-22 versions.',
 				code: installation,
 				language: 'Shell',
 			},

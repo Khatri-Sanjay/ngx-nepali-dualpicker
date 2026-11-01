@@ -1,6 +1,6 @@
 // Dated npm registry and link snapshot. Refresh with npm run docs:registry.
 export const registrySnapshot = {
-	checkedAt: '2026-10-31',
+	checkedAt: '2026-11-01',
 	latest: '1.1.4',
 	releases: [
 		{
@@ -11,11 +11,6 @@ export const registrySnapshot = {
 		{
 			version: '1.1.3',
 			date: '2026-06-01T15:36:10.969Z',
-			notesAvailable: false,
-		},
-		{
-			version: '1.1.2',
-			date: '2026-06-01T10:03:18.759Z',
 			notesAvailable: false,
 		},
 		{
@@ -38,29 +33,9 @@ export const registrySnapshot = {
 			date: '2026-02-12T06:05:15.113Z',
 			notesAvailable: false,
 		},
-		{
-			version: '1.0.3',
-			date: '2026-02-11T10:12:10.946Z',
-			notesAvailable: false,
-		},
-		{
-			version: '1.0.2',
-			date: '2026-02-11T06:22:06.729Z',
-			notesAvailable: false,
-		},
-		{
-			version: '0.0.2',
-			date: '2026-02-10T12:11:42.059Z',
-			notesAvailable: false,
-		},
-		{
-			version: '0.0.1',
-			date: '2026-02-10T09:51:11.374Z',
-			notesAvailable: false,
-		},
 	],
-	repositoryAvailable: false,
-	repositoryStatus: 404,
+	repositoryAvailable: true,
+	repositoryStatus: 200,
 	homepageAvailable: true,
 	npmPageStatus: 403,
 } as const;

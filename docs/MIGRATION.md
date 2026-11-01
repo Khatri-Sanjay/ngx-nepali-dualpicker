@@ -1,6 +1,6 @@
-# Migration from 1.1.4 to 2.0.0-next.0
+# Migration from 1.1.4 to 2.0.0
 
-This prerelease begins a new major version. Do not publish it as a 1.x patch.
+This release begins a new major version. Do not publish it as a 1.x patch.
 
 ## Removed APIs
 
@@ -76,7 +76,7 @@ DateConversionService and the component selector remain supported. Unsupported i
 
 ## Invalid arithmetic inputs
 
-`DateCalculator.getDaysInAdMonth` now throws for a non-integer year or a month outside integers 1?12. Previously invalid month indexes returned `undefined` despite the declared numeric return type. Validate input or catch the error at application boundaries. Valid Gregorian month lengths and all conversion results remain unchanged. This is an invalid-input bug correction within the current prerelease.
+`DateCalculator.getDaysInAdMonth` now throws for a non-integer year or a month outside integers 1?12. Previously invalid month indexes returned `undefined` despite the declared numeric return type. Validate input or catch the error at application boundaries. Valid Gregorian month lengths and all conversion results remain unchanged. This is an invalid-input bug correction within the 2.0.0 release.
 
 ## Accessibility and date-entry enhancements
 

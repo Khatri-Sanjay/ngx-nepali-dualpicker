@@ -156,20 +156,22 @@
 			}
 			@if (current.id === 'package') {
 				<p class="source-note">
-					Registry/link snapshot checked {{ site.registry.checkedAt }}. Latest published npm version:
-					{{ site.registry.latest }}.
+					Latest published npm version (automatically refreshed):
+					{{ published.latest() }}.
 					<a [href]="site.metadata.documentation" target="_blank" rel="noopener noreferrer"
-						>Existing package homepage</a
+						>Documentation homepage</a
 					>
-					(the older site, not a confirmed URL for this deployment).
+
 					<a [href]="site.baseHref + 'assets/library-license.txt'">Read the MIT license</a>.
 				</p>
 			}
 			@if (current.source) {
 				<p class="source-note">
 					Implementation source: <code>{{ current.source }}</code
-					>. The repository URL in package metadata currently returns 404; a source link will appear after it
-					is verified.
+					>.
+					<a [href]="site.repository" target="_blank" rel="noopener noreferrer"
+						>Browse the GitHub repository</a
+					>.
 				</p>
 			}
 			<nav class="page-pagination" aria-label="Previous and next documentation pages">

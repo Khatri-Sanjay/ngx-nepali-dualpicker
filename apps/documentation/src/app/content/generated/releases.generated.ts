@@ -2,6 +2,26 @@
 export const currentChanges = [
 	{
 		category: 'Added',
+		text: 'Add verified Signal Forms interoperability for Angular 21 and 22, document Angular 21 validator-forwarding limits, and fix validation inside a computed context.',
+		breaking: false,
+	},
+	{
+		category: 'Changed',
+		text: 'Refresh published npm versions automatically in documentation and playground; exclude unpublished versions from release history.',
+		breaking: false,
+	},
+	{
+		category: 'Added',
+		text: 'Add a shared dual-calendar logo, multi-size favicons, web manifests, social sharing images, and expanded documentation metadata.',
+		breaking: false,
+	},
+	{
+		category: 'Fixed',
+		text: 'Preserve selected dates when clicking the active selection mode and expose active calendar/mode states to assistive technology.',
+		breaking: false,
+	},
+	{
+		category: 'Added',
 		text: 'Import the library and demo into this workspace.',
 		breaking: false,
 	},
